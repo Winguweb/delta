@@ -1,0 +1,167 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
+}
+
+model User {
+  id                    String          @id @default(uuid()) @db.Uuid
+  email                 String          @unique @db.VarChar(254)
+  password              String          @db.VarChar(60)
+  firstName             String          @db.VarChar(100)
+  lastName              String          @db.VarChar(100)
+  telephone             String          @db.VarChar(100)
+  resetPasswordToken    String?         @unique @db.VarChar(200)
+  role                  UserRole
+  status                UserStatus
+  organizationName      String          @db.VarChar(100)
+  organizationRole      String          @db.VarChar(100)
+  organizationCountry   Country         @relation(fields: [organizationCountryId], references: [id])
+  organizationCountryId String          @db.Uuid
+  createdAt             DateTime        @default(now())
+  devices               Device[]
+  samples               Sample[]
+  SamplingPoint         SamplingPoint[]
+}
+
+model Country {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String   @unique @db.VarChar(100)
+  users     User[]
+  createdAt DateTime @default(now())
+}
+
+enum UserRole {
+  ADMIN
+  COLLABORATOR
+}
+
+enum UserStatus {
+  PENDING
+  ACTIVE
+  INACTIVE
+  BLOCKED
+}
+
+enum WaterBodyType {
+  RIO
+  LAGO
+  LAGUNA
+}
+
+enum AreaType {
+  URBANO
+  RURAL
+}
+
+model SamplingPoint {
+  id            String        @id @default(uuid()) @db.Uuid
+  name          String        @db.VarChar(100)
+  latitude      Float
+  longitude     Float
+  country       String        @db.VarChar(100)
+  description   String?       @db.VarChar(280)
+  waterBodyName String?       @db.VarChar(100)
+  waterBodyType WaterBodyType
+  areaType      AreaType
+  owner         User          @relation(fields: [ownerId], references: [id])
+  ownerId       String        @db.Uuid
+  devices       Device[]
+  samples       Sample[]
+}
+
+model Device {
+  id              Int            @id @default(autoincrement())
+  name            String         @db.VarChar(100)
+  description     String?        @db.VarChar(280)
+  components      String?        @db.VarChar(280)
+  samplingPoint   SamplingPoint? @relation(fields: [samplingPointId], references: [id])
+  samplingPointId String?        @db.Uuid
+  owner           User           @relation(fields: [ownerId], references: [id])
+  ownerId         String         @db.Uuid
+  samples         Sample[]
+}
+
+model SampleMeasurementValue {
+  id          String          @id @default(uuid()) @db.Uuid
+  parameter   SampleParameter @relation(fields: [parameterId], references: [id])
+  parameterId String          @db.Uuid
+  sample      Sample          @relation(fields: [sampleId], references: [id])
+  sampleId    Int
+  value       Float
+
+  @@unique([parameterId, sampleId])
+}
+
+enum SampleParameterType {
+  FISICA
+  QUIMICA
+  BIOLOGICA
+  HABITAT
+}
+
+model ConfirmationTokenAWS {
+  id                String @id @default(uuid()) @db.Uuid
+  arn               String @unique @db.VarChar(2048)
+  confirmationToken String @db.VarChar(2048)
+}
+
+model SampleParameter {
+  id                String                   @id @default(uuid()) @db.Uuid
+  name              String                   @unique @db.VarChar(100)
+  type              SampleParameterType
+  unit              String                   @db.VarChar(100)
+  measurementValues SampleMeasurementValue[]
+}
+
+model Sample {
+  id                Int                      @id @default(autoincrement())
+  samplingPoint     SamplingPoint            @relation(fields: [samplingPointId], references: [id])
+  samplingPointId   String                   @db.Uuid
+  device            Device                   @relation(fields: [deviceId], references: [id])
+  deviceId          Int
+  latitude          Float
+  longitude         Float
+  takenBy           User                     @relation(fields: [takenById], references: [id])
+  takenById         String                   @db.Uuid
+  measurementValues SampleMeasurementValue[]
+  takenAt           DateTime                 @default(now())
+}
+
+model NewsPost {
+  id          String         @id @default(uuid()) @db.Uuid
+  title       String         @db.VarChar(100)
+  description String         @db.VarChar(280)
+  startDate   DateTime       @db.Date()
+  endDate     DateTime       @db.Date()
+  status      NewsPostStatus
+}
+
+enum NewsPostStatus {
+  DRAFT
+  PUBLISHED
+}
+
+model Faq {
+  id        String   @id @default(uuid()) @db.Uuid
+  question  String   @db.VarChar(512)
+  answer    String   @db.Text
+  createdAt DateTime @default(now())
+}
+
+model About {
+  id   String @unique
+  text String @db.Text
+}
+
+model Change {
+  id          String   @id @default(uuid()) @db.Uuid
+  title       String   @db.VarChar(100)
+  description String?  @db.VarChar(280)
+  details     Json?
+  createdAt   DateTime @default(now())
+}

@@ -1,0 +1,55 @@
+version: '3'
+services:
+
+  db:
+    image: postgres:14.4-alpine
+    container_name: delta-db
+    env_file:
+      - ./.env
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    networks:
+      - delta-nw
+    restart: unless-stopped
+
+  app:
+    image: next-prisma-docker
+    container_name: delta-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: deploy
+    env_file:
+      - ./.env
+      - ./prisma/.env
+    ports:
+      - ${PORT}:${PORT}
+    networks:
+      - delta-nw
+    environment:
+      - POSTGRES_NAME=${POSTGRES_DB}
+      - POSTGRES_HOST=db
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: delta-pgadmin
+    depends_on:
+      - db
+    ports:
+      - '5555:80'
+    env_file:
+      - ./.env
+    volumes:
+      - ./pgadmin-data:/var/lib/pgadmin
+    restart: unless-stopped
+    networks:
+      - delta-nw
+
+networks:
+  delta-nw:
+    driver: bridge

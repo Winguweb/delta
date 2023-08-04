@@ -1,0 +1,34 @@
+.paginateTable > li {
+  padding: 0.5em 1em;
+  background: #f6f5f7;
+  margin: 1px;
+  font-weight: 300;
+  list-style: none;
+  border-radius: 15px;
+}
+.paginateTable > li:hover {
+  cursor: pointer;
+  background: #dedede;
+  color: #346af0;
+}
+
+@media (min-width: 768px) {
+  .paginateTable {
+    display: flex;
+    text-align: center;
+    width: 35%;
+    margin: auto;
+    margin-top: 15px;
+    margin-bottom: 80px;
+  }
+}
+@media (max-width: 768px) {
+  .paginateTable {
+    display: flex;
+    text-align: center;
+    width: 100%;
+    margin: auto;
+    margin-top: 15px;
+    margin-bottom: 80px;
+  }
+}

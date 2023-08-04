@@ -1,0 +1,26 @@
+name: Deploy Stage
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+  
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        environment: Stage
+        steps:
+            - name: Deploy to Stage
+              uses: appleboy/ssh-action@master
+              with:
+                  host: ${{ secrets.HOST }}
+                  username: ${{ secrets.USER }}           
+                  key: ${{ secrets.SSH_KEY }}
+                  port: ${{ secrets.VPS_SSH_PORT }}
+
+                  script: |
+                      cd ${{ vars.PROJECT_PATH }}
+                      git pull origin main
+                      sudo make build
+                      sudo make up
+                      sudo make deploy

@@ -1,0 +1,19 @@
+services:
+  db:
+    image: postgres:14.4-alpine
+    command: ['postgres', '-c', 'log_statement=all']
+    environment:
+      - POSTGRES_DB=delta
+      - POSTGRES_USER=delta
+      - POSTGRES_PASSWORD=delta
+    ports:
+      - 5432:5432
+  dbTest:
+    image: postgres:14.4-alpine
+    command: ['postgres', '-c', 'log_statement=all', '-p 5433']
+    environment:
+      - POSTGRES_DB=delta
+      - POSTGRES_USER=delta
+      - POSTGRES_PASSWORD=delta
+    ports:
+      - 5433:5433
