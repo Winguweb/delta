@@ -1,4 +1,4 @@
-import { CheckIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { ArrowLeftIcon, CheckIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import axios from 'axios';
 import Link from 'next/link';
 import React, { useState } from 'react';
@@ -9,11 +9,11 @@ import { GetSamplingPointsResponse } from '../../../../model/samplingPoint';
 import InputText from '../../../molecules/Input/InputText';
 import Select from '../../../molecules/Input/Select';
 import { Button } from '../../../molecules/Buttons/Button';
-import { Modal } from '../../Modal';
-import Text from '../../../molecules/Text';
 import { IconTrash } from '../../../../assets/icons';
-import { useRouter } from 'next/router';
 import { ResponseModal } from '../../ResponseModal';
+import { SparklesIcon } from '@heroicons/react/24/outline';
+import { DeviceApiKeyModal } from './DeviceApiKeyModal';
+import { useAuthenticatedUser } from '../../../../hooks/useAuthenticatedUser';
 
 const deviceSchema = z.object({
   name: z.string().min(3, 'El nombre es requerido').max(100, 'El nombre puede tener un máximo de 100 caracteres'),
@@ -35,6 +35,7 @@ interface DeviceDetailProps {
   type: 'create' | 'update';
   device?: GetDeviceResponse;
   samplingPoints: GetSamplingPointsResponse;
+  isAbleToPerformActions?: boolean;
 }
 
 const reducer: Reducer = (state, action) => {
@@ -51,7 +52,7 @@ const initialErrors: Errors = {
   samplingPointId: '',
 };
 
-const DeviceDetail: React.FC<DeviceDetailProps> = ({ device: foundDevice, samplingPoints, type }) => {
+const DeviceDetail: React.FC<DeviceDetailProps> = ({ device: foundDevice, samplingPoints, type, isAbleToPerformActions }) => {
   const initialData: Data = {
     create: {
       name: '',
@@ -67,9 +68,13 @@ const DeviceDetail: React.FC<DeviceDetailProps> = ({ device: foundDevice, sampli
     },
   }[type];
 
+  const user = useAuthenticatedUser();
+  const isDeviceOwner = user?.id === foundDevice?.owner.id;
+
   const [data, setData] = React.useReducer(reducer, initialData);
   const [errors, setErrors] = React.useState<Errors>(initialErrors);
   const [showModal, setShowModal] = useState(false);
+  const [showDeviceApiKeyModal, setShowDeviceApiKeyModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
 
   const handleSubmitCreate = async () => {
@@ -129,7 +134,7 @@ const DeviceDetail: React.FC<DeviceDetailProps> = ({ device: foundDevice, sampli
   return (
     <form className="flex flex-col space-y-8">
       <div className="flex flex-col space-y-8">
-        {type == "update" &&
+        {type === "update" && isAbleToPerformActions ?
           <div className='flex justify-end'>
             <Button
               onClick={handleDeleteDevice}
@@ -141,7 +146,7 @@ const DeviceDetail: React.FC<DeviceDetailProps> = ({ device: foundDevice, sampli
             >
               Eliminar Módulo
             </Button>
-          </div>
+          </div> : ''
         }
         <div className="flex flex-col lg:flex-row space-x-0 lg:space-x-6 lg:space-y-0 space-y-3">
           <InputText
@@ -149,6 +154,7 @@ const DeviceDetail: React.FC<DeviceDetailProps> = ({ device: foundDevice, sampli
             value={data.name}
             error={errors.name}
             variant='admin-2'
+            disabled={type === "update" && !isAbleToPerformActions}
             onChange={(e) => {
               setData({
                 type: 'name',
@@ -156,20 +162,36 @@ const DeviceDetail: React.FC<DeviceDetailProps> = ({ device: foundDevice, sampli
               });
             }}
           />
-          {type == "update" &&
-            <InputText
-              label="ID"
-              variant='admin-2'
-              value={foundDevice?.id}
-              disabled={true}
-            />
-          }
+          {type == "update" && (
+            <>
+              <InputText
+                label='ID'
+                variant='admin-2'
+                value={foundDevice?.id}
+                disabled={true}
+                allWrapperClassName='w-1/5'
+              />
+              {isDeviceOwner &&
+                <Button
+                  variant='primary-admin'
+                  icon={<SparklesIcon />}
+                  iconSize='xxs'
+                  iconColor='white'
+                  onClick={() => setShowDeviceApiKeyModal(true)}
+                  className='w-2/5'
+                >
+                  Generar Clave
+                </Button>
+              }
+            </>
+          )}
         </div>
 
         <div className='w-3/5 space-y-4'>
           <Select
             value={data.samplingPointId ?? null}
             variant={'admin-2'}
+            disabled={type === "update" && !isAbleToPerformActions}
             onChange={(value) => {
               setData({
                 type: 'samplingPointId',
@@ -192,6 +214,7 @@ const DeviceDetail: React.FC<DeviceDetailProps> = ({ device: foundDevice, sampli
           <InputText
             label="Descripción"
             variant='admin-2'
+            disabled={type === "update" && !isAbleToPerformActions}
             value={data.description}
             error={errors.description}
             onChange={(e) => {
@@ -209,6 +232,7 @@ const DeviceDetail: React.FC<DeviceDetailProps> = ({ device: foundDevice, sampli
           variant='admin-2'
           value={data.components}
           error={errors.components}
+          disabled={type === "update" && !isAbleToPerformActions}
           onChange={(e) => {
             setData({
               type: 'components',
@@ -217,7 +241,6 @@ const DeviceDetail: React.FC<DeviceDetailProps> = ({ device: foundDevice, sampli
           }}
           textarea
         />
-
 
         {type == "update" &&
           <div className="flex flex-col lg:flex-row space-x-0 lg:space-x-6 space-y-3 lg:space-y-0">
@@ -243,29 +266,46 @@ const DeviceDetail: React.FC<DeviceDetailProps> = ({ device: foundDevice, sampli
         }
       </div>
 
-
       <div className="flex flex-col lg:flex-row space-x-0 lg:space-x-6 space-y-3 lg:space-y-0">
-        <Link href="/admin/modulos">
-          <Button icon={<XMarkIcon />}
-            iconSize="small"
-            variant="secondary"
-            className='w-full lg:w-32'>Cancelar</Button>
-        </Link>
+        {type !== "update" || isAbleToPerformActions ?
+          <>
+            <Link href="/admin/modulos">
+              <Button icon={<XMarkIcon />}
+                iconSize="small"
+                variant="secondary"
+                className='w-full lg:w-32'>Cancelar</Button>
+            </Link>
 
-        <Button
-          icon={<CheckIcon />}
-          iconSize="small"
-          className='w-full lg:w-32'
-          onClick={() => handleSubmit()}
-        >
-          {type === 'create' ? 'Crear' : 'Confirmar'}
-        </Button>
+            <Button
+              icon={<CheckIcon />}
+              iconSize="small"
+              className='w-full lg:w-32'
+              onClick={() => handleSubmit()}
+            >
+              {type === 'create' ? 'Crear' : 'Confirmar'}
+            </Button>
+          </> :
+          <Link href="/admin/modulos">
+            <Button
+              icon={<ArrowLeftIcon />}
+              iconSize="small"
+              variant="primary-admin"
+              className='w-full lg:w-32'>Volver</Button>
+          </Link>
+        }
       </div>
       {showModal && (
         <ResponseModal
           showModal={showModal}
           message={successMessage}
           routePathname={'/admin/modulos/'}
+        />
+      )}
+      {type == "update" && showDeviceApiKeyModal && (
+        <DeviceApiKeyModal
+          deviceId={foundDevice?.id ? foundDevice.id : 0}
+          showModal={showDeviceApiKeyModal}
+          setShowModal={setShowDeviceApiKeyModal}
         />
       )}
     </form>

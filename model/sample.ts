@@ -1,4 +1,4 @@
-import { Device, Sample, SamplingPoint, User } from '@prisma/client';
+import { Device, Sample, SampleMeasurementValue, SampleParameter, SamplingPoint, User } from '@prisma/client';
 import { z } from 'zod';
 
 export const createAutomaticSampleSchema = z.object({
@@ -7,6 +7,7 @@ export const createAutomaticSampleSchema = z.object({
   longitude: z.number(),
   measurementValues: z.record(z.number()),
   takenAt: z.string().datetime(),
+  apiKey: z.string(),
 });
 
 export const createSampleSchema = z.object({
@@ -47,4 +48,11 @@ export type LastSampleResponse = {
   };
   takenAt: Date;
   measurementValues: Record<string, number>;
+};
+
+export type SampleForExport = Omit<Sample, 'samplingPointId' | 'takenById'> & {
+  takenBy: Pick<User, 'firstName' | 'lastName'>;
+  measurementValues: (Pick<SampleMeasurementValue, 'value'> & {
+    parameter: Pick<SampleParameter, 'name'>;
+  })[];
 };

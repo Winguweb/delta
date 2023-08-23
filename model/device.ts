@@ -29,3 +29,5 @@ interface AuxGetDevicesResponseInterface extends Pick<Device, 'id' | 'name' | 'd
 export type GetDevicesResponse = AuxGetDevicesResponseInterface[];
 
 export type GetDevicesResponseForTable = (Omit<AuxGetDevicesResponseInterface, 'owner'> & { organizationName: AuxGetDevicesResponseInterface['owner']['organizationName'] })[];
+
+export type PostDeviceApiKeyResponse = Pick<Device, 'apiKey'>;

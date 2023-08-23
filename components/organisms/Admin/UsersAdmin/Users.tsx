@@ -81,7 +81,7 @@ const Users: React.FC<UsersProps> = ({ refresh }) => {
             <IconButton
               icon={<IconPencil />}
               iconSize="small"
-              variant="tertiary"
+              variant="primary-admin"
               onClick={async () => {
                 await router.push(
                   `/admin/users/${(data as SignupRequest).id}`

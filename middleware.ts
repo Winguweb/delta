@@ -1,5 +1,4 @@
 import { NextMiddleware, NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
 import { UserRole } from '@prisma/client';
 import getUserDataFromReq from './utils/getUserDataFromReq';
 import { Method } from 'axios';
@@ -28,12 +27,6 @@ interface MethodConfig extends BaseConfig {
 type Config = GeneralConfig | MethodConfig;
 
 const routeConfig: Config[] = [
-  // related to Establishment
-  {
-    path: '/admin/sampling-points',
-    checkAsRegex: false,
-    roles: [UserRole.ADMIN, UserRole.COLLABORATOR],
-  },
   // related to About
   {
     path: '/admin/about',
@@ -139,7 +132,7 @@ const routeConfig: Config[] = [
   {
     path: '/api/admin/users',
     checkAsRegex: false,
-    roles: [UserRole.ADMIN],
+    roles: [UserRole.ADMIN,  UserRole.COLLABORATOR],
   },
   // related to Changelog
   {

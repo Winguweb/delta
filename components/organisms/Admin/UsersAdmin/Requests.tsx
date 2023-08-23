@@ -111,8 +111,8 @@ const Requests: React.FC<RequestsProps> = ({ onRefresh }) => {
           ({ data }) => (
             <IconButton
               icon={<CheckIcon />}
-              iconSize="small"
-              variant="tertiary"
+              iconSize="xxs"
+              variant="primary-admin"
               onClick={() => approveSignupRequest(data as GetUserResponse)}
               disabled={(data as SignupRequest).status === 'ACTIVE'}
             />
@@ -120,12 +120,12 @@ const Requests: React.FC<RequestsProps> = ({ onRefresh }) => {
           ({ data }) => (
             <IconButton
               icon={<XMarkIcon />}
-              iconSize="small"
-              variant="tertiary"
+              iconSize="xxs"
+              variant="primary-admin"
               onClick={() => rejectSignupRequest(data as GetUserResponse)}
               className={classNames([
-                { 'bg-danger': (data as SignupRequest).status !== 'BLOCKED' },
-                { 'bg-disabled': (data as SignupRequest).status === 'BLOCKED' },
+                { '!bg-danger': (data as SignupRequest).status !== 'BLOCKED' },
+                { '!bg-disabled': (data as SignupRequest).status === 'BLOCKED' },
               ])}
               disabled={(data as SignupRequest).status === 'BLOCKED'}
             />
@@ -133,11 +133,13 @@ const Requests: React.FC<RequestsProps> = ({ onRefresh }) => {
           ({ data: rowData }) => (
             <IconButton
               icon={<EyeIcon />}
-              iconSize="small"
+              iconSize="xxs"
+              variant="primary-admin"
+              iconColor='primary'
+              className='bg-white border border-primary'
               onClick={() => {
                 openModal(data?.indexOf(rowData as typeof data[0]));
               }}
-              variant="quaternary"
             />
           ),
         ]}

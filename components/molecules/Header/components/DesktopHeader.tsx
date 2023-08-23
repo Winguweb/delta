@@ -47,6 +47,8 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({
             icon={isLogged ? <ArrowLeftOnRectangleIcon /> : <ArrowRightOnRectangleIcon />}
             iconSize="small"
             variant='quaternary'
+            className='text-primary'
+            iconColor='primary'
             onClick={isLogged ? onLogout : onLogin}
             size="lg"
           >

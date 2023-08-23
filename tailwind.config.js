@@ -21,6 +21,7 @@ module.exports = {
         dark: '#323239',
         warning: '#E1980A',
         danger: '#DB3500',
+        'danger-secondary': '#DB35001A',
         error: '#DD2A03',
         success: '#49C462',
         disabled: '#D2D8EA',
@@ -64,6 +65,7 @@ module.exports = {
         '3xl': '0px 4px 25px 0px #0000001A',
         '4xl': '0px 8px 16px 0px #0000000A',
         main: '0px 2px 25px 0px #00000014',
+        small: '0px 4px 25px 0px #0000001A',
       },
       minWidth: {
         desktop: '60rem',

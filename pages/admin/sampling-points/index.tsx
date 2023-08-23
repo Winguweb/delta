@@ -14,6 +14,7 @@ import Select from '../../../components/molecules/Input/Select';
 import countries from '../../../utils/countries';
 import InputText from '../../../components/molecules/Input/InputText';
 import { AreaType, WaterBodyType } from '@prisma/client';
+import { useAuthenticatedUser } from '../../../hooks/useAuthenticatedUser';
 
 
 const filterNames = [
@@ -25,6 +26,8 @@ const filterNames = [
 
 
 const SamplingPointsPage: NextPage = (props) => {
+  const user = useAuthenticatedUser();
+
   const { filters, setFilters } = useFilters(filterNames);
 
   const debouncedFilters = useDebounce(filters, 700);
@@ -134,13 +137,16 @@ const SamplingPointsPage: NextPage = (props) => {
 
         {!query.isValidating && query.data && (
           <SamplingPointTable
-            samplingPoints={query.data.map((samplingPoint) => ({
+            samplingPoints={query.data.map((samplingPoint) => {
+              const isUserOwner = user?.id === samplingPoint.ownerId;
+             return {
               name: samplingPoint.name,
               id: samplingPoint.id,
               country: samplingPoint.country,
               areaType: samplingPoint.areaType,
               waterBodyType: samplingPoint.waterBodyType,
-            }))}
+              isUserOwner: isUserOwner,
+            }})}
             headers={['Nombre', 'País', 'Tipo', 'Cuerpo de agua']}
           />
         )}

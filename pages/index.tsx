@@ -66,7 +66,7 @@ export const FiltersButton = (props: FilterProps) => {
     <Button
       name={id}
       onClick={onClick}
-      className={`w-full lg:w-80 lg:mr-2 !justify-start my-2 `}
+      className={`w-full lg:w-80 lg:mr-2 !justify-start my-2 py-2 shadow-small`}
       iconSize={'medium'}
       variant={active ? 'secondary' : 'tertiary'}
       icon={icon}
@@ -154,11 +154,11 @@ const Home: NextPage = React.memo(() => {
       <Head>
         <title>Delta</title>
       </Head>
-      <MainContainer className={'w-full h-full lg:w-3/5 lg:mx-4 mt-4 pt-8 lg:flex-grow-0'}>
+      <MainContainer className={'w-full h-full lg:w-3/5 lg:mx-4 pt-8 mt-12 lg:flex-grow-0'}>
         <div className="w-full flex flex-col justify-center">
           <div className="flex-col">
-            <Text as="h2" className='text-center'>¿Qué estás buscando?</Text>
-            <p className={'text-xs text-black mt-2 text-center mb-3'}>Selecciona una o más opciones</p>
+            <Text as="h2" className='text-center '>¿Qué estás buscando?</Text>
+            <p className={'text-xs text-black text-center my-3'}>Selecciona una o más opciones</p>
           </div>
           <div className="flex flex-col lg:flex-row flex-wrap justify-center">
             {Object.values(filters).map((filter) => (
@@ -172,7 +172,7 @@ const Home: NextPage = React.memo(() => {
             ))}
           </div>
         </div>
-        <div className="flex flex-col lg:flex-row flex-wrap justify-center">
+        <div className="flex flex-col lg:flex-row flex-wrap justify-center py-6">
           <SearchButton enabled={filtersSelected} onClick={handleSearchButtonClicked} />
           <SearchAllButton onClick={handleSearchAllButtonClicked} />
         </div>

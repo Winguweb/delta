@@ -81,7 +81,7 @@ const ResultsList: React.FC<ResultsListProps> = (props) => {
   return (
     <div
       className={`${mapVisibility == 'hidden' ? 'block' : 'hidden'
-        } mt-10 lg:mt-0 lg:block bg-white w-100 h-[calc(100vh_-_255px)] lg:h-[calc(100vh_-_195px)] scroll-style overflow-auto relative `}
+        } mt-14 lg:mt-0 lg:block bg-white w-100 h-[calc(100vh_-_260px)] lg:h-[calc(100vh_-_195px)] scroll-style overflow-auto relative `}
     >
       {loading && (
         <div className="flex justify-center p-4">
@@ -102,7 +102,7 @@ const ResultsList: React.FC<ResultsListProps> = (props) => {
                 onClick={() => handleDetailsClick(result.id)}
               />
             );
-          })
+          })  
           : ''}
       </div>
       {!loading && results && !results.length ? (

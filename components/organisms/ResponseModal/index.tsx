@@ -2,6 +2,7 @@ import React from 'react'
 import { Modal } from '../Modal';
 import Text from '../../molecules/Text';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 interface ResponseModalProps {
     message: string,
@@ -22,15 +23,14 @@ export const ResponseModal = ({message, showModal, routePathname}:ResponseModalP
         {message}
       </Text>
       <div className="pb-4 lg:pt-3 flex justify-center">
+      <Link href={`${routePathname}`}>
         <button
           className="btn-primary font-bold"
           type="button"
-          onClick={() => {
-            router.push({ pathname: routePathname });
-          }}
         >
           OK
         </button>
+      </Link>
       </div>
     </div>
   </Modal>

@@ -40,7 +40,7 @@ export function TableBody<Data = Record<string, string>>({
 
         return (
           // TODO: key={index} is not a good idea
-          <tr key={index} className="hover:bg-gray-100">
+          <tr key={index} className="hover:bg-slate-50 hover:text-black">
             {rowData.map((cell, i) => {
               const foundFormatCell = formatCell?.find((format) =>
                 format.condition(cells[i])

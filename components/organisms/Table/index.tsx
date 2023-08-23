@@ -4,6 +4,7 @@ import TableHead, { TableHeaderItemProps } from './TableHead';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import InputText from '../../molecules/Input/InputText';
 import Select from '../../molecules/Input/Select';
+import classNames from 'classnames';
 
 type TableProps<Data = Record<string, string>> = {
   data?: Data[];
@@ -22,6 +23,7 @@ type TableProps<Data = Record<string, string>> = {
     value: string | null;
   };
   formatCell?: TableBodyProps['formatCell'];
+  className?: string;
 };
 
 function Table<Data = Record<string, string> | undefined>({
@@ -32,6 +34,7 @@ function Table<Data = Record<string, string> | undefined>({
   searchInput,
   formatCell,
   selectInput,
+  className,
 }: TableProps<Data>) {
   const [sortField, setSortField] = useState<keyof Data | null>(null);
   const [order, setOrder] = useState('asc');
@@ -112,7 +115,7 @@ function Table<Data = Record<string, string> | undefined>({
       </div>
 
       <div className="table w-full">
-        <table className="w-full text-sm text-left text-gray-500">
+        <table className={classNames("w-full text-sm text-left text-gray-500", className)}>
           <TableHead<Data>
             headers={headers.map((header) => ({
               ...header,

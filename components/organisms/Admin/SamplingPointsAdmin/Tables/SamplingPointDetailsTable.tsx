@@ -21,6 +21,7 @@ interface SamplingPointDetailsTableProps {
   samplingPointId?: string;
   samples?: GetSampleResponse[];
   devices?: GetDeviceResponse[];
+  isAbleToPerformActions?: boolean;
 }
 
 type TransformedSampleType = {
@@ -35,13 +36,14 @@ type TransformedSampleType = {
 }
 
 type TransformedDeviceType = {
-  id: number;
   name: string;
+  id: number;
   owner: string;
-  description: string | null;
 }
 
-export const SamplingPointDetailsTable: React.FC<SamplingPointDetailsTableProps> = ({ samples, devices, samplingPointId }) => {
+export const SamplingPointDetailsTable: React.FC<SamplingPointDetailsTableProps> = (
+  { samples, devices, samplingPointId, isAbleToPerformActions }
+) => {
 
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -49,13 +51,6 @@ export const SamplingPointDetailsTable: React.FC<SamplingPointDetailsTableProps>
   const [sampleId, setSampleId] = useState<number | null>(null)
   const [showModal, setShowModal] = useState(false);
 
-
-  const { filters, setFilters } = useFilters([
-    { key: 'search', isArray: false },
-    { key: 'status', isArray: false },
-  ]);
-
-  const debouncedFilters = useDebounce(filters, 700);
 
   const transformedSamples: TransformedSampleType[] | undefined = samples?.map((sample) => (
     {
@@ -70,16 +65,10 @@ export const SamplingPointDetailsTable: React.FC<SamplingPointDetailsTableProps>
     }));
 
   const transformedDevices: TransformedDeviceType[] | undefined = devices?.map((device) => ({
-    id: device.id,
     name: device.name,
+    id: device.id,
     owner: device.owner.organizationName,
-    description: device.description,
   }));
-
-  const user = useAuthenticatedUser();
-  const isOwner = (sampleSelected: TransformedSampleType) => {
-    return sampleSelected.ownerId === user?.id;
-  }
 
   const handleDeleteSample = (id: number) => {
     setSampleId(id)
@@ -110,32 +99,30 @@ export const SamplingPointDetailsTable: React.FC<SamplingPointDetailsTableProps>
               {
                 key: 'date',
                 label: 'Fecha',
-                isAction: false,
               },
               {
                 key: 'time',
                 label: 'Hora',
-                isAction: false,
+                isAction: true,
               },
               {
                 key: 'ph',
                 label: 'Ph',
-                isAction: false,
+                isAction: true,
               },
               {
                 key: 'temperature',
                 label: 'Temperatura',
-                isAction: false,
+                isAction: true,
               },
               {
                 key: 'electroconductivity',
                 label: 'Electroconductividad',
-                isAction: false,
+                isAction: true,
               },
               {
                 key: 'responsible',
                 label: 'Responsable',
-                isAction: false,
               },
               { key: 'delete', label: 'Eliminar', isAction: true },
               { key: 'edit', label: 'Editar', isAction: true },
@@ -150,7 +137,7 @@ export const SamplingPointDetailsTable: React.FC<SamplingPointDetailsTableProps>
             ]}
             actions={[
               ({ data }) => (
-                isOwner(data as TransformedSampleType) ?
+                isAbleToPerformActions ?
                   <IconButton
                     onClick={() => handleDeleteSample((data as TransformedSampleType).id)}
                     icon={<TrashIcon />}
@@ -158,26 +145,46 @@ export const SamplingPointDetailsTable: React.FC<SamplingPointDetailsTableProps>
                     iconSize="xs"
                     iconColor='danger'
                     className="justify-self-center"
-                  /> : ''
+                  /> : 
+                  <IconButton
+                  icon={<TrashIcon />}
+                  variant="primary-admin"
+                  iconSize="xs"
+                  iconColor='danger'
+                  className="justify-self-center"
+                  disabled={true}
+                />
               ),
-              ({ data }) => (
-                isOwner(data as TransformedSampleType) ?
-                  <Link href={`${samplingPointId}?sample=${(data as TransformedSampleType).id}`}>
-                    <IconButton
-                      icon={<IconPencil />}
-                      variant="primary-admin"
-                      iconSize="xs"
-                      className="justify-self-center"
-                    />
-                  </Link> : ''
+              ({ data }) => (isAbleToPerformActions ?
+                <Link href={`${samplingPointId}?sample=${(data as TransformedSampleType).id}`}>
+                  <IconButton
+                    icon={<IconPencil />}
+                    variant="primary-admin"
+                    iconSize="xs"
+                    className="justify-self-center"
+                  />
+                </Link> :  
+                <IconButton
+                    icon={<IconPencil />}
+                    variant="primary-admin"
+                    iconSize="xs"
+                    className="justify-self-center"
+                    disabled={true}
+                  />
               ),
             ]}
-            data={transformedSamples}
+            data={[...transformedSamples]}
             formatCell={[
               {
-                condition: (key) => key === 'date' || key === 'time' || key === 'ph' || key === 'temperature' || key === 'electroconductivity' || key === 'responsible',
+                condition: (key) => key === 'date' || key === 'time' ||  key === 'responsible',
                 component: ({ value }) => {
                   return <Text as="p2">{value}</Text>;
+                },
+              },
+              {
+                condition: (key) => key === 'ph' || key === 'temperature' || key === 'electroconductivity',
+                component: ({ value }) => {
+                  return <Text as="p2" className='text-center'>{value}</Text>;
                 },
               },
             ]}
@@ -207,38 +214,37 @@ export const SamplingPointDetailsTable: React.FC<SamplingPointDetailsTableProps>
         <Table
           headers={[
             {
-              key: 'id',
-              label: 'ID',
-              isAction: false,
-            },
-            {
               key: 'name',
               label: 'Nombre',
-              isAction: false,
+            },
+            {
+              key: 'id',
+              label: 'ID',
+              isAction: true,
             },
             {
               key: 'owner',
               label: 'Propietario',
-              isAction: false,
-            },
-            {
-              key: 'description',
-              label: 'Descripción',
-              isAction: false,
+              isAction: true,
             }
           ]}
           cells={[
-            'id',
             'name',
+            'id',
             'owner',
-            'description',
           ]}
-          data={transformedDevices}
+          data={[...transformedDevices]}
           formatCell={[
             {
-              condition: (key) => key === 'id' || key === 'name' || key === 'owner' || key === 'description',
+              condition: (key) => key === 'name',
               component: ({ value }) => {
-                return <Text as="p2">{value}</Text>;
+                return <Text as="p2" className='text-left text-ellipsis truncate w-full overflow-hidden'>{value}</Text>;
+              },
+            },
+            {
+              condition: (key) => key === 'id' || key === 'owner',
+              component: ({ value }) => {
+                return <Text as="p2" className='text-center'>{value}</Text>;
               },
             },
           ]}

@@ -54,13 +54,13 @@ let links: SidebarLinkProps[] = [
     selected: false,
     restrictedTo: [UserRole.ADMIN],
   },
-  // {
-  //   href: '/admin/changelog',
-  //   text: 'Historial de cambios',
-  //   icon: <BookmarkIcon />,
-  //   selected: false,
-  //   restrictedTo: [UserRole.ADMIN],
-  // },
+  {
+    href: '/admin/changelog',
+    text: 'Historial de cambios',
+    icon: <BookmarkIcon />,
+    selected: false,
+    restrictedTo: [UserRole.ADMIN],
+  },
 ];
 
 

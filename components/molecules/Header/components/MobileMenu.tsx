@@ -33,7 +33,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
         />
       </div>
 
-      <div className="flex flex-col space-y-9">
+      <div className="flex flex-col space-y-3">
         <div className="flex flex-col space-y-5">
           {items.map((item) => {
             return (
@@ -44,16 +44,21 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
           })}
         </div>
 
-        <Button
-          icon={isLogged ? <ArrowLeftOnRectangleIcon /> : <ArrowRightOnRectangleIcon />}
-          iconSize="small"
-          variant='quaternary'
-          size="lg"
-          className="w-36"
-          onClick={isLogged ? onLogout : onLogin}
-        >
-          {isLogged ? 'Cerrar sesión' : 'Ingresar'}
-        </Button>
+        <div className="flex justify-start">
+
+          <Button
+            icon={isLogged ? <ArrowLeftOnRectangleIcon /> : <ArrowRightOnRectangleIcon />}
+            iconSize="small"
+            variant='quaternary'
+            size="lg"
+            iconColor='primary'
+            padding='0'
+            className="text-primary"
+            onClick={isLogged ? onLogout : onLogin}
+          >
+            {isLogged ? 'Cerrar sesión' : 'Iniciar sesión'}
+          </Button>
+        </div>
       </div>
     </div>
   );

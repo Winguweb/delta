@@ -13,6 +13,8 @@ import Text from '../components/molecules/Text';
 import { Button } from '../components/molecules/Buttons/Button';
 import { Marker, UserMarker } from '../components/molecules/Marker';
 import Modal from '../components/organisms/Resultados/Modals/Modal';
+import { Pill } from '../components/atoms/Pill';
+import { filterList } from '.';
 
 const USER_MARKER_ID = 'USER_MARKER_ID';
 
@@ -35,7 +37,7 @@ export type MapPosition = {
 export interface ActiveResult extends GetSamplingPointResponse {
   distance?: string;
   lastSample?: any,
-	owner?:{
+  owner?: {
     organizationName: string
   }
   samplesResponse?: {
@@ -171,6 +173,8 @@ const Results: NextPage<ServerSideProps> = ({ googleMapsApiKey }: InferGetServer
     (url) => axios.get(url).then((res) => res.data)
   );
 
+  const filters = [...areaTypes, ...takenByOrganizations];
+
   useEffect(() => {
     if (!router.isReady) {
       return;
@@ -258,10 +262,26 @@ const Results: NextPage<ServerSideProps> = ({ googleMapsApiKey }: InferGetServer
         }
       >
         {mapPosition && (
-          <div className={'flex bg-white'}>
+          <div className={'flex bg-gray-50 lg:bg-white'}>
+            <ul className="lg:hidden absolute flex flex-wrap mt-8 ml-1 overflow-x-auto justify-center">
+              {filters.length ? filters.map((filter) => (
+                <li key={filter}>
+                  <Pill type="primary" className={'mb-1 mr-1 inline-block'}>
+                    {filter}
+                  </Pill>
+                </li>
+              )) : filterList.map((filter) => (
+                <li key={filter.key}>
+                  <Pill type="primary" className={'mb-1 mr-1 inline-block'}>
+                    {filter.key}
+                  </Pill>
+                </li>
+              ))
+              }
+            </ul>
             <div
               className={`${mapVisibility == 'hidden' ? 'relative' : 'absolute'
-                } lg:relative w-full lg:w-1/3 left-0 top-0 px-content`}
+                } lg:relative w-full lg:w-1/3 left-0 mt-20 lg:mt-6 rounded-t-3xl lg:rounded-t-none px-content bg-white shadow-main lg:shadow-none`}
             >
               <SideBar
                 items={areaTypes}
@@ -278,7 +298,7 @@ const Results: NextPage<ServerSideProps> = ({ googleMapsApiKey }: InferGetServer
 
             <div
               className={classNames(
-                `${mapVisibility} mt-10 lg:mt-0 lg:block w-full lg:map-desktop-height map-mobile-height lg:mx-auto`
+                `${mapVisibility} mt-20 lg:mt-0 lg:block w-full lg:map-desktop-height map-mobile-height lg:mx-auto rounded-t-3xl lg:rounded-t-none overflow-hidden shadow-main lg:shadow-none`
               )}
             >
               <GoogleMapReact
@@ -297,6 +317,7 @@ const Results: NextPage<ServerSideProps> = ({ googleMapsApiKey }: InferGetServer
                 onChange={({ bounds }) => {
                   setBounds(bounds);
                 }}
+
               >
                 <UserMarker
                   key={USER_MARKER_ID}

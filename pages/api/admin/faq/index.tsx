@@ -30,27 +30,6 @@ const handler: NextApiHandler = async (req, res) => {
     return res.status(200).end();
   }
 
-  if (req.method === 'DELETE') {
-
-    const schema = z.object({
-      id: z.string().uuid(),
-    });
-    const queryParse = schema.safeParse(req.body);
-    if (!queryParse.success) {
-      return res.status(400).send(queryParse.error.message);
-    }
-    const queryData = queryParse.data;
-
-    
-
-    try {
-      await prismaClient.faq.delete({ where: { id: queryData.id } });
-    } catch (e) {
-      return res.status(404).end();
-    }
-    return res.status(200).end();
-  }
-
   const schema = z.object({
     id: z.string().uuid(),
     question: z.string().max(512),

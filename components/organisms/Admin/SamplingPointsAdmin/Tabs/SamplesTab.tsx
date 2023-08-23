@@ -40,7 +40,12 @@ export const SamplesTab = ({ isAbleToPerformActions, samplingPoint }: SamplesTab
                         : <div></div>
                 }
             >
-                <SamplingPointDetailsTable devices={samplingPoint.devices} samples={samples} samplingPointId={samplingPoint.id} />
+                <SamplingPointDetailsTable 
+                devices={samplingPoint.devices} 
+                samples={samples} 
+                samplingPointId={samplingPoint.id} 
+                isAbleToPerformActions={isAbleToPerformActions}
+                />
             </SamplingPointContainer>
             <Modal
                 showModal={isAddSampleOpen}

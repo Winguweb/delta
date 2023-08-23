@@ -5,6 +5,8 @@ import { getSession } from 'next-auth/react';
 import axiosFromServerSideProps from '../../utils/axiosFromServerSideProps';
 import AdminLayout from '../../components/organisms/Layout/AdminLayout';
 import Text from '../../components/molecules/Text';
+import Pagination from '../../components/molecules/Pagination';
+import { useState } from 'react';
 
 interface ChangelogProps {
   changes: (Omit<Change, 'createdAt'> & { createdAt: string })[];
@@ -28,12 +30,8 @@ export const getServerSideProps: GetServerSideProps<ChangelogProps> = async (
 
     return {
       props: {
-        changes: changes
-          .sort(({ createdAt }) => compareAsc(createdAt, new Date()))
-          .map((change) => ({
-            ...change,
-            createdAt: change.createdAt.toISOString(),
-          })),
+        changes: JSON.parse(JSON.stringify(changes
+          .sort(({ createdAt }) => compareAsc(createdAt, new Date()))))
       },
     };
   } catch (e) {
@@ -66,7 +64,7 @@ type TableProps = {
 
 function Table({ data, headers }: TableProps) {
   return (
-    <div className="overflow-x-scroll rounded relative mt-8 w-full">
+    <div className="overflow-x-scroll rounded relative mt-4 w-full h-96">
       <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
@@ -116,13 +114,24 @@ function Table({ data, headers }: TableProps) {
 }
 
 const Changelog: NextPage<ChangelogProps> = ({ changes }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+
+  const currentChanges = changes.slice(startIndex, endIndex);
+
+  const loadNextPageChanges = (nextPage: number) => {
+    setCurrentPage(nextPage);
+  };
   return (
     <AdminLayout title="Historial de cambios">
       <Text as="h1">Changelog</Text>
 
       <Table
         headers={['Fecha', 'Título', 'Descripción', 'Detalles']}
-        data={changes.map((change) => {
+        data={currentChanges.map((change) => {
           return [
             format(new Date(change.createdAt), 'dd/MM/yyyy HH:mm'),
             change.title,
@@ -132,6 +141,12 @@ const Changelog: NextPage<ChangelogProps> = ({ changes }: InferGetServerSideProp
             </pre>,
           ];
         })}
+      />
+      <Pagination
+        setPageNumber={setCurrentPage}
+        pageNumber={currentPage}
+        pages={Math.ceil(changes.length / itemsPerPage)} // Calcular el número total de páginas
+        loadNextPage={loadNextPageChanges}
       />
     </AdminLayout>
   );
