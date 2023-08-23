@@ -1439,6 +1439,27 @@
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
 
+"@json2csv/formatters@^7.0.2":
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/@json2csv/formatters/-/formatters-7.0.2.tgz#6f6cfc4a77ad7361bb01ea846c8999babf8ee741"
+  integrity sha512-XbvRFzZJRltd6n6IUYHjg+Q4miMwd6h0EN3HvLv1u0s31IxpC9kWCBVh4dNHysRLvCcb4l4FkbUCc1GY8bfw8Q==
+
+"@json2csv/node@^7.0.2":
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/@json2csv/node/-/node-7.0.2.tgz#0cbd42fb1d3a5775e4d699462495aacd903c4941"
+  integrity sha512-dHV0yiqMfWif/XBkyyiwIuwvf1kEmwDD0NFKTxH4K/NXO4HKWmWvou9yjB1B3YJwzK3/dba2NAtBFOfXh9/4lQ==
+  dependencies:
+    "@json2csv/plainjs" "^7.0.2"
+
+"@json2csv/plainjs@^7.0.2":
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/@json2csv/plainjs/-/plainjs-7.0.2.tgz#e7022415b50308fc39cfec93d48e8c92204c0262"
+  integrity sha512-Cjkdc6/sF2XLLf7hi1N2DzMPzMMO0YnxetgLZVUqTT10EANm3SAWWRtluYFAeuqC0DtNBOTgIWgiwmDsEtf8Ag==
+  dependencies:
+    "@json2csv/formatters" "^7.0.2"
+    "@streamparser/json" "^0.0.16"
+    lodash.get "^4.4.2"
+
 "@linaria/core@4.2.9":
   version "4.2.9"
   resolved "https://registry.yarnpkg.com/@linaria/core/-/core-4.2.9.tgz#4917bde18d064a29cff4fd86aa99621f953a2a2c"
@@ -1716,6 +1737,11 @@
   integrity sha512-V4BG07kuYSUkTCSBHG8G8TNhM+F19jXFWnQtzj+we8DrkpSBCee9Z3Ms8yiGer/dlmhe35/Xdgyo3/0rQKg7YA==
   dependencies:
     "@sinonjs/commons" "^3.0.0"
+
+"@streamparser/json@^0.0.16":
+  version "0.0.16"
+  resolved "https://registry.yarnpkg.com/@streamparser/json/-/json-0.0.16.tgz#606d6f41cab365e9cb89361f60286e5cb8d2abf7"
+  integrity sha512-9TYO1bTNtYhF6UA2+DMGvSkewSpSyXSK1ZaizGcVTeE2rpdH/QcmdIMQkmnglS6uRbzP5QcZ4Dydirf1org4oQ==
 
 "@svgr/babel-plugin-add-jsx-attribute@8.0.0":
   version "8.0.0"
@@ -5532,6 +5558,11 @@ lodash.forown@~2.3.0:
     lodash._basecreatecallback "~2.3.0"
     lodash._objecttypes "~2.3.0"
     lodash.keys "~2.3.0"
+
+lodash.get@^4.4.2:
+  version "4.4.2"
+  resolved "https://registry.yarnpkg.com/lodash.get/-/lodash.get-4.4.2.tgz#2d177f652fa31e939b4438d5341499dfa3825e99"
+  integrity sha512-z+Uw/vLuy6gQe8cfaFWD7p0wVv8fJl3mbzXh33RS+0oW2wvUqiRXiQ69gLWSLpgB5/6sU+r6BlQR0MBILadqTQ==
 
 lodash.identity@~2.3.0:
   version "2.3.0"

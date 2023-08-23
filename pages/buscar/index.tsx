@@ -39,8 +39,8 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async (
 };
 
 const SearchLocation: NextPage<ServerSideProps> = ({
-                                                              googleMapsApiKey,
-                                                            }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+                                                                      googleMapsApiKey,
+                                                                    }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const router = useRouter();
   const [searchLocation, setSearchLocation] = useState('');
   const [locationState, setLocation] = useState('');
@@ -142,7 +142,7 @@ const SearchLocation: NextPage<ServerSideProps> = ({
       </Head>
       <MainContainer className={'w-full h-full lg:w-3/5 lg:mx-4 mt-4 p-8 lg:flex-grow-0'}>
         <div className="w-full flex flex-col justify-center">
-          <div className={'px-content flex flex-col text-center lg:flex-row justify-center'}>
+          <div className={'px-content pt-4 flex flex-col text-center lg:flex-row justify-center'}>
             <p className="text-gray-700 text-xs p-1 mx-3">
               Estás buscando:
             </p>

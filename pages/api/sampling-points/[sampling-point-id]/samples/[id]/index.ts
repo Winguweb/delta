@@ -221,7 +221,6 @@ async function deleteHandler(
 
     return res.status(204).json({ id });
   } catch (e) {
-    console.log(e);    
     return res.status(500).json({ error: 'Internal server error' });
   }
 }

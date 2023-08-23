@@ -16,7 +16,13 @@ interface SamplingPointFormProps {
     onSubmit: (data: any) => Promise<void>;
     initialData: any;
     isEditMode: boolean;
-    userData?: GetUserResponse;
+    userData?: {
+        id: string,
+        firstName: string,
+        lastName: string,
+        email: string,
+        organizationName: string,
+    };
 }
 
 export const SamplingPointForm: React.FC<SamplingPointFormProps> = ({ onSubmit, initialData, isEditMode, userData }) => {
@@ -96,7 +102,7 @@ export const SamplingPointForm: React.FC<SamplingPointFormProps> = ({ onSubmit, 
 
     return (
         <form onSubmit={handleSubmit} className="flex flex-col space-y-6">
-            <div className="flex space-x-4 w-full">
+            <div className="flex w-full flex-col lg:flex-row lg:space-x-4 space-x-0 lg:space-y-0 space-y-2">
                 <RowTextInputs
                     className="w-full"
                     inputs={[
@@ -109,7 +115,7 @@ export const SamplingPointForm: React.FC<SamplingPointFormProps> = ({ onSubmit, 
                         },
                     ]}
                 />
-                <div className='w-3/6'>
+                <div className='w-full lg:w-3/6'>
                     <Select
                         label='Tipo'
                         value={data.areaType}
@@ -133,9 +139,9 @@ export const SamplingPointForm: React.FC<SamplingPointFormProps> = ({ onSubmit, 
             </div>
 
 
-            <div className="flex space-x-4">
+            <div className="flex flex-col lg:flex-row lg:space-x-4 space-x-0 lg:space-y-0 space-y-2">
                 <RowTextInputs
-                    className='w-2/3'
+                    className='w-full lg:w-2/3'
                     inputs={[
                         {
                             onChange: handleChange,
@@ -155,7 +161,7 @@ export const SamplingPointForm: React.FC<SamplingPointFormProps> = ({ onSubmit, 
                         },
                     ]}
                 />
-                <div className='w-1/3'
+                <div className='w-full lg:w-1/3'
                 >
 
                     <Select
@@ -179,8 +185,8 @@ export const SamplingPointForm: React.FC<SamplingPointFormProps> = ({ onSubmit, 
                 </div>
             </div>
 
-            <div className="flex space-x-4 w-full">
-                <div className="flex space-x-4 w-1/3">
+            <div className="flex flex-col lg:flex-row lg:space-x-4 space-x-0 lg:space-y-0 space-y-2 w-full">
+                <div className="flex space-x-4 w-full lg:w-1/3">
                     <Select
                         label='Cuerpo de agua'
                         value={data.waterBodyType}

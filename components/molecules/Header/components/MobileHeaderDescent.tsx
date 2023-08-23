@@ -4,12 +4,13 @@ import Text from '../../Text';
 
 const MobileHeaderDescent: React.FC = () => {
   return (
-    <div className="flex flex-col space-y-3 items-start">
-      <Image src="/favicon.ico" height={26} width={26} alt="Delta ícono" />
-
-      <Text as="p2">
-        Servicio de atención.
-      </Text>
+    <div className="w-full flex justify-center ">
+      <div className='flex-col'>
+        <Image src="/favicon.ico" height={26} width={26} alt="Delta ícono" className='ml-5' />
+        <Text as="p2">
+          Delta
+        </Text>
+      </div>
     </div>
   );
 };

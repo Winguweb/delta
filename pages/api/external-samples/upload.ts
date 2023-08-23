@@ -5,6 +5,7 @@ import { Device } from '@prisma/client';
 import { prismaClient } from '../../../server/prisma/client';
 import availableMethodsHandler from '../../../utils/availableMethodsHandler';
 import { createSample } from '../../../utils/samples';
+import bcrypt from 'bcrypt';
 
 const handler: NextApiHandler = async (req, res) => {
   if (!availableMethodsHandler(req, res, ['POST'])) {
@@ -28,6 +29,16 @@ const handler: NextApiHandler = async (req, res) => {
 
   if (!device) {
     return res.status(404).json({ error: `Device with id ${req.body.deviceId} not found` });
+  }
+
+  if (!device.apiKey) {
+    return res.status(403).json({ error: `Device with id ${req.body.deviceId} does not have its api key set` });
+  }
+
+  const isApiKeyValid = await bcrypt.compare(body.apiKey, device.apiKey);
+
+  if (!isApiKeyValid) {
+    return res.status(401).json({ message: 'Unauthorized' });
   }
 
   if (!device.samplingPointId) {

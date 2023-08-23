@@ -19,6 +19,12 @@ interface ServerSideProps {
   // Define any required props here
 }
 
+interface TransformedDeviceType extends Device {
+  owner: {
+   id: string;
+  }
+ }
+
 const filterNames = [
   { key: 'query', isArray: false },
   // Add more filters as needed
@@ -42,8 +48,12 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async (
 const DevicesAdminPage: NextPage<ServerSideProps> = ({ }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { filters, setFilters } = useFilters(filterNames);
   const user = useAuthenticatedUser();
+  
+  const isOwner = (deviceSelected: TransformedDeviceType) => {    
+    return deviceSelected.owner.id === user?.id;
+  }
   const isUserAdmin = user?.role === UserRole.ADMIN;
-  const isAbleToPerformActions = isUserAdmin;
+  
   const debouncedFilters = useDebounce(filters, 700);
 
   const query = useQueryUpdater<GetDevicesResponse>(
@@ -63,7 +73,7 @@ const DevicesAdminPage: NextPage<ServerSideProps> = ({ }: InferGetServerSideProp
       organizationName: device.owner.organizationName,
     }));
   }
-
+  
   return (
     <div className="bg-box-background h-screen">
       <AdminLayout title="Módulos">
@@ -94,6 +104,7 @@ const DevicesAdminPage: NextPage<ServerSideProps> = ({ }: InferGetServerSideProp
 
         {!query.isValidating && query.data && (
           <Table
+          className='table-admin'
             data={[...devices]}
             cells={['name', 'id', 'organizationName', 'description']}
             headers={[
@@ -114,7 +125,7 @@ const DevicesAdminPage: NextPage<ServerSideProps> = ({ }: InferGetServerSideProp
                 key: 'description',
               },
               {
-                label: 'Editar',
+                label: 'Ver/Editar',
                 isAction: true,
                 key: 'edit',
               },
@@ -123,12 +134,12 @@ const DevicesAdminPage: NextPage<ServerSideProps> = ({ }: InferGetServerSideProp
               ({ data }) => (
                 <Link href={`modulos/${(data as Device).id}`}>
                   <IconButton
-                    icon={isAbleToPerformActions ? <IconPencil /> : <EyeIcon />}
+                    icon={isOwner(data as TransformedDeviceType) || isUserAdmin ? <IconPencil /> : <EyeIcon />}
                     iconSize="xxs"
                     variant="primary-admin"
                   />
-                </Link>
-              ),
+                </Link>)
+              ,
             ]}
             formatCell={[
               {

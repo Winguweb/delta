@@ -115,7 +115,7 @@ const StepOne: NextPage<ServerSideProps> = ({ countries }: InferGetServerSidePro
 
       <MainContainer
         className={
-          'w-full flex flex-col justify-center px-0 lg:px-4 py-10'
+          'w-full flex flex-col justify-center px-0 lg:px-4 py-10 !shadow-none'
         }
         bg={'bg-main-image'}
       >
@@ -140,6 +140,7 @@ const StepOne: NextPage<ServerSideProps> = ({ countries }: InferGetServerSidePro
                       type="text"
                       error={errors.firstName?.message}
                       required={true}
+                      marginLeft={'4.7'}
                     />
                   )}
                 />
@@ -158,6 +159,7 @@ const StepOne: NextPage<ServerSideProps> = ({ countries }: InferGetServerSidePro
                       type="text"
                       error={errors.lastName?.message}
                       required={true}
+                      marginLeft={'4.7'}
                     />
                   )}
                 />
@@ -178,7 +180,7 @@ const StepOne: NextPage<ServerSideProps> = ({ countries }: InferGetServerSidePro
                       type="text"
                       error={errors.email?.message}
                       required={true}
-                      marginLeft={'7.7'}
+                      marginLeft={'9'}
                     />
                   )}
                 />
@@ -197,6 +199,7 @@ const StepOne: NextPage<ServerSideProps> = ({ countries }: InferGetServerSidePro
                       type="text"
                       error={errors.telephone?.message}
                       required={true}
+                      marginLeft={'5'}
                     />
                   )}
                 />
@@ -217,7 +220,7 @@ const StepOne: NextPage<ServerSideProps> = ({ countries }: InferGetServerSidePro
                       type="text"
                       error={errors.organizationName?.message}
                       required={true}
-                      marginLeft={'10.7'}
+                      marginLeft={'12.7'}
                     />
                   )}
                 />
@@ -236,7 +239,7 @@ const StepOne: NextPage<ServerSideProps> = ({ countries }: InferGetServerSidePro
                       type="text"
                       error={errors.organizationRole?.message}
                       required={true}
-                      marginLeft={'9'}
+                      marginLeft={'10.7'}
                     />
                   )}
                 />
@@ -256,7 +259,7 @@ const StepOne: NextPage<ServerSideProps> = ({ countries }: InferGetServerSidePro
                       label="País de la organización"
                       className='!max-h-32'
                       required={true}
-                      marginLeft={'9.3'}
+                      marginLeft={'10.7'}
                     >
                       {countries.map((country) => (
                         <Select.Option key={country.id} value={country.id}>

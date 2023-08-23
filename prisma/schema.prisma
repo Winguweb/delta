@@ -79,6 +79,7 @@ model Device {
   name            String         @db.VarChar(100)
   description     String?        @db.VarChar(280)
   components      String?        @db.VarChar(280)
+  apiKey          String?        @db.VarChar(100)
   samplingPoint   SamplingPoint? @relation(fields: [samplingPointId], references: [id])
   samplingPointId String?        @db.Uuid
   owner           User           @relation(fields: [ownerId], references: [id])

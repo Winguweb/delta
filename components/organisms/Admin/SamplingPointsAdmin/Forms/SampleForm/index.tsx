@@ -12,10 +12,9 @@ import { useAuthenticatedUser } from '../../../../../../hooks/useAuthenticatedUs
 import { validationSchema } from './validationSchema';
 import { Data, FormErrors } from './types';
 import { formatName, mockMeasurementValues } from './utils';
-import { Modal } from '../../../../Modal';
-import { Button } from '../../../../../molecules/Buttons/Button';
 import { ResponseModal } from '../../../../ResponseModal';
 import { AlertDeleteModal } from '../../../../AlertDeleteModal';
+import { useCalculateDistance } from '../../../../../../hooks/useCalculateDistance';
 
 interface SampleOnSamplingPointFormProps {
   onCancelCb?: () => void;
@@ -89,7 +88,10 @@ export const SampleForm: React.FC<SampleOnSamplingPointFormProps> = ({
   const handleValidation = (data: Data) => {
     try {
       validationSchema.validateSync(data, { abortEarly: false });
-      setErrors({});
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        date: '',
+      }));
     } catch (validationErrors: any) {
       const newErrors: FormErrors = {};
       validationErrors.inner.forEach((error: any) => {
@@ -128,6 +130,17 @@ export const SampleForm: React.FC<SampleOnSamplingPointFormProps> = ({
     setValidationDone(false);
     handleValidation(data);
 
+    // Validar que la fecha no sea futura
+    const currentDate = moment();
+    const selectedDate = moment(`${data.date} ${data.time}`, 'YYYY-MM-DD HH:mm');
+    if (selectedDate.isAfter(currentDate)) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        date: 'La fecha seleccionada no puede ser futura.',
+      }));
+      return;
+    }
+
     if (Object.keys(errors).length === 0 || isValidationDone) {
       try {
         const { date, time, ...restData } = data;
@@ -162,19 +175,32 @@ export const SampleForm: React.FC<SampleOnSamplingPointFormProps> = ({
 
   const renderMeasurementInputs = () => {
     const measurementValues = isEditing ? data.measurementValues : mockMeasurementValues;
+
+    // Define el orden deseado de los campos
+    const fieldOrder = ['pH [Unidades de pH]', 'Temperatura del Agua [°Celsius]', 'Conductividad [µs/cm]'];
+
+    // Ordena las entradas del objeto basándote en el fieldOrder
+    const sortedEntries = Object.entries(measurementValues).sort((a, b) => {
+      const indexA = fieldOrder.indexOf(a[0]);
+      const indexB = fieldOrder.indexOf(b[0]);
+      return indexA - indexB;
+    });
+
     return (
-      <div className='flex space-x-4'>
-        {Object.entries(measurementValues).map(([parameterId, value]) => (
-          <NumberInput
-            name={`measurementValues.${parameterId}`}
-            key={parameterId}
-            defaultValue={value}
-            onChange={(e) => handleMeasurementValueChange(parameterId, e.target.value)}
-            label={formatName(parameterId)}
-            placeholder={formatName(parameterId)}
-            variant='admin'
-          />
-        ))}
+      <div className='flex flex-col lg:flex-row lg:space-x-4 space-x-0 lg:space-y-0 space-y-2'>
+        {sortedEntries.map(([parameterId, value]) => {
+          return (
+            <NumberInput
+              name={`measurementValues.${parameterId}`}
+              key={parameterId}
+              defaultValue={value}
+              onChange={(e) => handleMeasurementValueChange(parameterId, e.target.value)}
+              label={formatName(parameterId)}
+              placeholder={formatName(parameterId)}
+              variant='admin'
+            />
+          )
+        })}
       </div>
     );
   };
@@ -198,6 +224,20 @@ export const SampleForm: React.FC<SampleOnSamplingPointFormProps> = ({
     setShowDeleteModal(false);
   };
 
+  const mainPoint = {
+    latitude: samplingPoint.latitude,
+    longitude: samplingPoint.longitude,
+  };
+
+  const distance = useCalculateDistance(
+    mainPoint.latitude,
+    mainPoint.longitude,
+    data.latitude ?? 0,
+    data.longitude ?? 0
+  );
+
+  const isDistanceValid = distance <= 5;
+
   return (
     <RelationOnSamplingPointForm
       isEditing={isEditing}
@@ -208,7 +248,7 @@ export const SampleForm: React.FC<SampleOnSamplingPointFormProps> = ({
       onCancelCb={onCancelCb}
     >
       <FormContainer className="flex flex-col space-y-3 w-full">
-        <div className='flex space-x-4'>
+        <div className='flex flex-col lg:flex-row lg:space-x-4 space-x-0 lg:space-y-0 space-y-2'>
           {isEditing &&
             <InputText
               variant={'admin'}
@@ -253,6 +293,11 @@ export const SampleForm: React.FC<SampleOnSamplingPointFormProps> = ({
               placeholder="Latitud"
               label="Latitud"
             />
+            {!isDistanceValid && (
+              <Text as='p3' className='ml-2 text-danger'>
+                La latitud y longitud no deben superar una distancia de 5 metros del punto principal.
+              </Text>
+            )}
             {errors.latitude && <Text as='p3' className='ml-2 text-danger'>{errors.latitude}</Text>}
           </div>
           <div className='w-full space-y-2'>
@@ -265,6 +310,7 @@ export const SampleForm: React.FC<SampleOnSamplingPointFormProps> = ({
               label="Longitud"
             />
             {errors.longitude && <Text as='p3' className='ml-2 text-danger'>{errors.longitude}</Text>}
+
           </div>
         </div>
 
@@ -307,7 +353,7 @@ export const SampleForm: React.FC<SampleOnSamplingPointFormProps> = ({
           <ResponseModal
             showModal={showModal}
             message={successMessage}
-            routePathname={`/admin/sampling-points/${samplingPoint.id}?addSample=false`}
+            routePathname={`/admin/sampling-points/${samplingPoint.id}`}
           />
         )}
       </FormContainer>

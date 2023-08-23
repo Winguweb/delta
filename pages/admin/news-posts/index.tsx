@@ -105,86 +105,93 @@ const NewsPostsAdminPage: NextPage<ServerSideProps> = ({ news }: InferGetServerS
 
           <Link href="news-posts/add">
             <Button
-               icon={<PlusCircleIcon />}
-               variant="quaternary"
-               iconSize="small"
-               iconClassName={'bg-inherit'}
+              icon={<PlusCircleIcon />}
+              variant="quaternary"
+              iconSize="small"
+              iconClassName={'bg-inherit'}
             >
               Nueva noticia
             </Button>
           </Link>
         </div>
         <div className="px-4 bg-white rounded-xl overflow-x-auto">
-          <Table
-            data={[...activeNewsPosts, ...finishedNewsPosts]}
-            cells={['status', 'title', 'description', 'startDate', 'endDate']}
-            headers={[
-              {
-                label: 'Estado',
-                key: 'status',
-              },
-              {
-                label: 'Título',
-                key: 'title',
-              },
-              {
-                label: 'Descripción',
-                key: 'description',
-              },
-              {
-                label: 'Fecha de inicio',
-                key: 'startDate',
-              },
-              {
-                label: 'Fecha de finalización',
-                key: 'endDate',
-              },
-              {
-                label: 'Editar',
-                isAction: true,
-                key: 'edit',
-              },
-            ]}
-            actions={[
-              ({ data }) => (
-                <Link href={`news-posts/${(data as NewsPost).id}`}>
+          {(activeNewsPosts || finishedNewsPosts) ?
+            <Table
+              data={[...activeNewsPosts, ...finishedNewsPosts]}
+              cells={['status', 'title', 'description', 'startDate', 'endDate']}
+              headers={[
+                {
+                  label: 'Estado',
+                  key: 'status',
+                },
+                {
+                  label: 'Título',
+                  key: 'title',
+                },
+                {
+                  label: 'Descripción',
+                  key: 'description',
+                },
+                {
+                  label: 'Fecha de inicio',
+                  key: 'startDate',
+                },
+                {
+                  label: 'Fecha de finalización',
+                  key: 'endDate',
+                },
+                {
+                  label: 'Editar',
+                  isAction: true,
+                  key: 'edit',
+                },
+              ]}
+              actions={[
+                ({ data }) => (
+                  <Link href={`news-posts/${(data as NewsPost).id}`}>
                     <IconButton
                       icon={<PencilIcon />}
-                      iconSize="small"
-                      variant="tertiary"
+                      iconSize="xxs"
+                      variant="primary-admin"
                     />
-                </Link>
-              ),
-            ]}
-            formatCell={[
-              {
-                condition: (key) => key === 'status',
-                component: ({ value }) => (
-                  <StatusTag status={value as NewsPostStatus} />
+                  </Link>
                 ),
-              },
-              {
-                condition: (key) => key === 'description',
-                component: ({ value }) => (
-                  <div className="text-ellipsis truncate w-[150px] overflow-hidden">
-                    {value}
-                  </div>
-                ),
-              },
-              {
-                condition: (key) => key === 'startDate' || key === 'endDate',
-                component: ({ value }) => {
-                  // Get date string
-                  const valueSubstring = value.substring(0, 10);
-                  // Convert to date
-                  const date = new Date(valueSubstring);
-                  // Format date
-                  const formattedDate = moment(date).utc().format('DD/MM/yyyy');
-                  return <div className="p-0 lg:pl-4">{formattedDate}</div>;
+              ]}
+              formatCell={[
+                {
+                  condition: (key) => key === 'status',
+                  component: ({ value }) => (
+                    <StatusTag status={value as NewsPostStatus} />
+                  ),
                 },
-              },
-            ]}
-          />
+                {
+                  condition: (key) => key === 'description',
+                  component: ({ value }) => (
+                    <div className="text-ellipsis truncate w-[150px] overflow-hidden">
+                      {value}
+                    </div>
+                  ),
+                },
+                {
+                  condition: (key) => key === 'startDate' || key === 'endDate',
+                  component: ({ value }) => {
+                    // Get date string
+                    const valueSubstring = value.substring(0, 10);
+                    // Convert to date
+                    const date = new Date(valueSubstring);
+                    // Format date
+                    const formattedDate = moment(date).utc().format('DD/MM/yyyy');
+                    return <div className="p-0 lg:pl-4">{formattedDate}</div>;
+                  },
+                },
+              ]}
+            />
+            :
+            (
+              <Text as="p2" className='mx-4 p-4'>
+                No hay noticias
+              </Text>
+            )}
         </div>
       </div>
     </AdminLayout>

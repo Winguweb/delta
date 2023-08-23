@@ -76,18 +76,22 @@ const Sidebar: React.FC<{ links: SidebarLinkProps[] }> = ({ links }) => {
 						<SidebarLink key={link.href} {...link} />
 					))}
 				</div>
-				<Button
-					icon={<ArrowRightOnRectangleIcon />}
+				<Link
+					href={'/'}
 					onClick={async () => {
 						await signOut();
 					}}
-					iconSize="small"
-					className="mt-6 !justify-start"
-					variant={'quaternary'}
-					iconColor={"primary"}
 				>
-					Cerrar sesión
-				</Button>
+					<Button
+						icon={<ArrowRightOnRectangleIcon />}
+						iconSize="small"
+						className="mt-6 !justify-start"
+						variant={'quaternary'}
+						iconColor={"primary"}
+					>
+						Cerrar sesión
+					</Button>
+				</Link>
 
 			</div>
 		</div>

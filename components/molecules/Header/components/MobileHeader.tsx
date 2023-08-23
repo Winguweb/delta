@@ -31,7 +31,7 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({
   return (
     <div
       className={classNames([
-        'w-full pt-4 pb-4 lg:hidden bg-white',
+        'w-full lg:hidden bg-white left-0 py-4',
         // menu cover all screen when is mobile and is open
         { 'min-h-screen absolute': isMenuOpen },
       ])}
@@ -51,7 +51,7 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({
       )}
 
       {isMenuOpen && (
-        <FullScreen className="bg-white max-h-screen px-2 pt-4 space-y-8 lg:hidden">
+        <FullScreen className="bg-white max-h-screen px-4 pt-4 space-y-8 lg:hidden">
           <MobileMenu
             items={items}
             onClose={onToggle}

@@ -83,11 +83,7 @@ const newFaqsSectionContent = async (question?: string, answer?: string) => {
 }
 
 const removeFaqsSectionContent = async (id?: string) => {
-  return await axios.delete('/api/admin/faq',
-    {
-      data: { id },
-    }
-  );
+  return await axios.delete(`/api/admin/faq/${id}`);
 };
 
 // @ts-ignore

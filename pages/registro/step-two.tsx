@@ -125,7 +125,7 @@ const StepTwo: NextPage = (props) => {
 
       <MainContainer
         className={
-          'w-full flex flex-col justify-center px-0 lg:px-4 py-10'
+          'w-full flex flex-col justify-center px-0 lg:px-4 py-10 !shadow-none'
         }
         bg={'bg-main-image'}
       >
@@ -151,7 +151,7 @@ const StepTwo: NextPage = (props) => {
                         type={passwordVisibility.password ? 'text' : 'password'}
                         error={errors.password?.message}
                         required={true}
-                        marginLeft={'5.3'}
+                        marginLeft={'6'}
                       />{' '}
                     </>
                   )}
@@ -185,7 +185,7 @@ const StepTwo: NextPage = (props) => {
                         }
                         error={errors.passwordConfirm?.message}
                         required={true}
-                        marginLeft={'8.9'}
+                        marginLeft={'10.5'}
                       />{' '}
                     </>
                   )}

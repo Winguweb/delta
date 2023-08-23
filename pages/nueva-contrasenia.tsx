@@ -126,7 +126,7 @@ const NewPasswordPage: NextPage = (props) => {
 
       <MainContainer
         className={
-          'w-full flex flex-col justify-center px-0 lg:px-4 py-28 space-y-8'
+          'w-full flex flex-col justify-center px-0 lg:px-4 py-28 space-y-8 !shadow-none'
         }
         bg={'bg-primary'}
       >
@@ -160,7 +160,7 @@ const NewPasswordPage: NextPage = (props) => {
                         type={passwordVisibility.password ? 'text' : 'password'}
                         error={errors.password?.message}
                         required={true}
-                        marginLeft={'5.3'}
+                        marginLeft={'6.3'}
                       />{' '}
                     </>
                   )}
@@ -194,7 +194,7 @@ const NewPasswordPage: NextPage = (props) => {
                         }
                         error={errors.passwordConfirm?.message}
                         required={true}
-                        marginLeft={'8.9'}
+                        marginLeft={'10.5'}
                       />{' '}
                     </>
                   )}

@@ -15,6 +15,7 @@ export interface SamplingPointTableItemProps {
   country: string,
   waterBodyType: WaterBodyType;
   areaType: AreaType;
+  isUserOwner: boolean;
 }
 
 interface SamplingPointTableItemWrapperProps {
@@ -45,11 +46,10 @@ export const SamplingPointTableItem: React.FC<SamplingPointTableItemProps> = ({
   country,
   waterBodyType,
   areaType,
+  isUserOwner
 }) => {
   const user = useAuthenticatedUser();
   const isUserAdmin = user?.role === UserRole.ADMIN;
-  const isAbleToPerformActions = isUserAdmin;
-
   return (
     <SamplingPointTableItemWrapper>
       <Text as="p2" className="font-semibold">
@@ -62,9 +62,9 @@ export const SamplingPointTableItem: React.FC<SamplingPointTableItemProps> = ({
 
       <Text as="p2">{areaType ?? '-'}</Text>
 
-      <Link href={`sampling-points/${id}`} className="w-full flex justify-center">
+      <Link href={`/admin/sampling-points/${id}`} className="w-full flex justify-center">
         <IconButton
-          icon={isAbleToPerformActions ? <IconPencil /> : <EyeIcon />}
+          icon={isUserOwner  || isUserAdmin ? <IconPencil /> : <EyeIcon />}
           variant="primary-admin"
           iconSize="xxs"
           className="justify-self-center"

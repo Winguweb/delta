@@ -1,4 +1,4 @@
-import { NextApiHandler } from 'next';
+import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { z, ZodError } from 'zod';
 import { prismaClient } from '../../../../server/prisma/client';
 import availableMethodsHandler from '../../../../utils/availableMethodsHandler';
@@ -8,71 +8,126 @@ import { GetSamplingPointResponseWithLastSample } from '..';
 
 const availableMethods = ['GET', 'PUT', 'DELETE'];
 
-const getById = async (id: string, withDevices?: boolean) => {
-  if (withDevices) {
-    return await prismaClient.samplingPoint.findUnique({
-      where: { id: id },
-      include: {
-        devices: {
-          select: {
-            id: true,
-            samplingPointId: true,
-            name: true,
-            description: true,
-            components: true,
-            owner: {
-              select: {
-                id: true,
-                organizationName: true,
-              },
-            },
-          },
-        },
-      },
-    });
-  } else {
-    return prismaClient.samplingPoint.findUnique({
-      where: { id },
-    });
-  }
-};
-
 const handler: NextApiHandler = async (req, res) => {
   if (!availableMethodsHandler(req, res, availableMethods)) {
     return;
   }
 
-  /** Get sampling point by id */
-  if (req.method === 'GET') {
-    const {
-      'sampling-point-id': samplingPointId,
-      lastSample,
-      withDevices,
-    } = req.query;
+  const id = req.query['sampling-point-id'];
+
+  if (!id) {
+    res.status(400).json({ error: 'Missing id' });
+    return;
+  }
+
+  if (typeof id !== 'string') {
+    res.status(400).json({ error: 'Id must be a string' });
+    return;
+  }
+
+  const { method } = req;
+
+  if (method === 'GET') {
+    await getHandler(req, res, id);
+  }
+  if (method === 'PUT') {
+    await putHandler(req, res, id);
+  }
+  if (method === 'DELETE') {
+    await deleteHandler(req, res, id);
+  }
+
+  return;
+};
+
+const getById = async (
+  id: string,
+  withDevices?: boolean,
+  withOwnerData?: boolean
+) => {
+  let includeOptions: any = {};
+
+  if (withDevices) {
+    includeOptions.devices = {
+      select: {
+        id: true,
+        samplingPointId: true,
+        name: true,
+        description: true,
+        components: true,
+        owner: withOwnerData
+          ? {
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                email: true,
+                organizationName: true,
+              },
+            }
+          : undefined,
+      },
+    };
+  }
+
+  if (withOwnerData) {
+    includeOptions.owner = {
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        organizationName: true,
+      },
+    };
+  }
+
+  if (Object.keys(includeOptions).length === 0) {
+    includeOptions = false;
+  }
+
+  return await prismaClient.samplingPoint.findUnique({
+    where: { id: id },
+    include: includeOptions,
+  });
+};
+
+async function getHandler(
+  req: NextApiRequest,
+  res: NextApiResponse<any>,
+  id: string
+): Promise<any> {
+  try {
+    const { lastSample, withDevices, withOwnerData } = req.query;
 
     const withDevicesExists = Boolean(withDevices);
+    const withOwnerDataExists = Boolean(withOwnerData);
 
-    if (!samplingPointId) {
+    if (!id) {
       res.status(400).json({ error: `Missing sampling point id` });
       return;
     }
 
-    if (typeof samplingPointId !== 'string') {
+    if (typeof id !== 'string') {
       res.status(400).json({ error: `sampling point id must be a string` });
       return;
     }
 
-    let samplingPoint = await getById(samplingPointId, withDevicesExists);
+    let samplingPoint = await getById(
+      id,
+      withDevicesExists,
+      withOwnerDataExists
+    );
 
     if (!samplingPoint) {
-      res.status(404).json({ error: `sampling point not found` });
+      res.status(404).json({ error: 'pepe' });
       return;
     }
 
     if (lastSample) {
       const lastSample = await prismaClient.sample.findFirst({
         where: {
-          samplingPointId: samplingPointId,
+          samplingPointId: id,
         },
         orderBy: {
           takenAt: 'desc',
@@ -116,24 +171,23 @@ const handler: NextApiHandler = async (req, res) => {
     } else {
       res.status(200).json(samplingPoint);
     }
-
-    return;
+  } catch (e) {
+    return res.status(500).json({ error: 'Internal server error' });
   }
+}
 
-  /**
-   * Update sampling point by id
-   * Samples will be updated by deleting all samples and adding new ones from the request body
-   * If you want to add or delete a sample, use /api/sampling-points/[sampling-point-id]/samples
-   */
-  if (req.method === 'PUT') {
-    const samplingPointId = req.query['sampling-point-id'];
-
-    if (!samplingPointId) {
+async function putHandler(
+  req: NextApiRequest,
+  res: NextApiResponse<any>,
+  id: string
+): Promise<any> {
+  try {
+    if (!id) {
       res.status(400).json({ error: `Missing group sampling point id` });
       return;
     }
 
-    if (typeof samplingPointId !== 'string') {
+    if (typeof id !== 'string') {
       res.status(400).json({ error: `sampling point id must be a string` });
       return;
     }
@@ -149,7 +203,7 @@ const handler: NextApiHandler = async (req, res) => {
 
     const body = req.body as z.infer<typeof updateSamplingPointSchema>;
 
-    const samplingPoint = await getById(samplingPointId);
+    const samplingPoint = await getById(id);
 
     if (!samplingPoint) {
       res.status(404).json({ error: `Sampling point not found` });
@@ -157,7 +211,7 @@ const handler: NextApiHandler = async (req, res) => {
     }
 
     const updatedSamplingPoint = await prismaClient.samplingPoint.update({
-      where: { id: samplingPointId },
+      where: { id: id },
       data: {
         ...samplingPoint,
         ...body,
@@ -177,10 +231,17 @@ const handler: NextApiHandler = async (req, res) => {
 
     res.status(200).json(updatedSamplingPoint);
     return;
+  } catch (e) {    
+    return res.status(500).json({ error: 'Internal server error' });
   }
+}
 
-  /** Delete sampling point by id */
-  if (req.method === 'DELETE') {
+async function deleteHandler(
+  req: NextApiRequest,
+  res: NextApiResponse<any>,
+  id: string
+): Promise<any> {
+  try {
     const samplingPointId = req.query['sampling-point-id'];
 
     if (!samplingPointId) {
@@ -214,7 +275,9 @@ const handler: NextApiHandler = async (req, res) => {
 
     res.status(204).json({ id: samplingPointId });
     return;
+  } catch (e) {
+    return res.status(500).json({ error: 'Internal server error' });
   }
-};
+}
 
 export default handler;

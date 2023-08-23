@@ -89,7 +89,7 @@
   }
 
   .map-mobile-height {
-    height: calc(100vh - 116px) !important;
+    height: calc(100vh - 158px) !important;
   }
   .map-desktop-height {
     height: calc(100vh - 84px) !important;
@@ -115,4 +115,44 @@
   fill: black; /* Color de relleno */
   stroke: #3C33FF; /* Color del contorno */
   stroke-width: 1px; /* Grosor del contorno */
+}
+
+.image-icon-format-white, .image-icon-format-white svg path{
+  stroke: white; /* Color del contorno */
+  stroke-width: 1.2px; /* Grosor del contorno */
+}
+.image-icon-format-stroke svg path{
+  stroke-width: 1.5px; /* Grosor del contorno */
+}
+
+/* Estilos para el contenedor de la tabla */
+.table-admin {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Estilos para el thead */
+.table-admin thead tr{
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); 
+}
+
+/* Estilos para el tbody */
+.table-admin tbody {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; 
+}
+
+/* Estilos para las filas (tr) del tbody */
+.table-admin tbody tr {
+  border-radius: 16px;
+  background-color: white; 
+  display: flex;
+}
+
+/* Estilos para las celdas (td) de la tabla */
+.table-admin td {
+  flex: 1; 
+  padding: 1rem;
 }

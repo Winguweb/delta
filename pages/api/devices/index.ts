@@ -47,6 +47,7 @@ const handler: NextApiHandler = async (req, res) => {
         components: true,
         owner: {
           select: {
+            id:true,
             organizationName: true,
           }
         }

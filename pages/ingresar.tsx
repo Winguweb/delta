@@ -61,7 +61,7 @@ const SignIn: NextPage = (props) => {
       </Head>
       <MainContainer
         className={
-          'w-full h-fit flex flex-col lg:flex-row justify-center lg:space-x-28 px-4 py-4 lg:py-16'
+          'w-full h-fit flex flex-col lg:flex-row justify-center lg:space-x-28 px-4 py-4 lg:py-16 !shadow-none'
         }
         bg={'bg-main-image'}
       >

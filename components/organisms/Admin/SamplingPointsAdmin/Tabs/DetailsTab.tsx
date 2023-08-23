@@ -15,11 +15,12 @@ import { SampleForm } from "../Forms/SampleForm";
 import { useRouter } from "next/router";
 import { GetUserResponse } from "../../../../../model/user";
 import { IconPencil } from "../../../../../assets/icons";
+import { useAuthenticatedUser } from "../../../../../hooks/useAuthenticatedUser";
+import { UserRole } from "@prisma/client";
 
 type DetailsTabProps = {
     isAbleToPerformActions: boolean;
     samplingPoint: GetSamplingPointResponseWithSamples;
-    users: GetUserResponse[];
 }
 
 
@@ -35,11 +36,11 @@ const initialErrors = {
 };
 
 
-export const DetailsTab = ({ isAbleToPerformActions, samplingPoint, users }: DetailsTabProps) => {
+export const DetailsTab = ({ isAbleToPerformActions, samplingPoint }: DetailsTabProps) => {
 
     const [isEdit, setIsEdit] = useState(false)
 
-    const userData = users && users.filter(user=> user.id === samplingPoint.ownerId)
+    const userData = samplingPoint.owner
 
     const router = useRouter()
 
@@ -78,7 +79,7 @@ export const DetailsTab = ({ isAbleToPerformActions, samplingPoint, users }: Det
         },
         {
             title: 'Propietario / Owner',
-            data: `${userData[0].firstName} ${userData[0].lastName}`,
+            data: `${userData.firstName} ${userData.lastName}`,
         },
 
 
@@ -159,7 +160,7 @@ export const DetailsTab = ({ isAbleToPerformActions, samplingPoint, users }: Det
         }
     };
 
-    
+
     const initialData = {
         name: samplingPoint.name ?? '',
         areaType: samplingPoint.areaType ?? 0,
@@ -171,7 +172,7 @@ export const DetailsTab = ({ isAbleToPerformActions, samplingPoint, users }: Det
         description: samplingPoint.description ?? '',
     }
 
-    
+
 
     return (
         isEdit ?
@@ -190,12 +191,12 @@ export const DetailsTab = ({ isAbleToPerformActions, samplingPoint, users }: Det
                 }
             >
                 <div className="flex flex-col space-y-8">
-                    <SamplingPointForm onSubmit={handleSubmitForm} initialData={initialData} isEditMode={true} userData={userData[0]} />
+                    <SamplingPointForm onSubmit={handleSubmitForm} initialData={initialData} isEditMode={true} userData={userData} />
                 </div>
             </SamplingPointContainer >)
             :
             (<SamplingPointContainer
-                rightElement={
+                rightElement={ isAbleToPerformActions ?
                     <Button
                         variant="primary-admin"
                         spanClassName={'hidden'}
@@ -204,7 +205,7 @@ export const DetailsTab = ({ isAbleToPerformActions, samplingPoint, users }: Det
 
                     >
                         Editar
-                    </Button>
+                    </Button> : ""
                 }
             >
                 <div className={`flex flex-col space-y-3 lg:space-x-0 lg:grid lg:grid-cols-2 lg:gap-6`}>

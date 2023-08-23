@@ -48,10 +48,10 @@ export const Icon = React.memo<IconProps>((props) => {
           { 'w-12 h-12 ': size === 'large' },
           { 'w-16 h-16': size === 'xl' },
           { 'rounded-full': circle },
-          { 'text-white !stroke-white': type === 'primary-admin' && !disabled },
+          { 'image-icon-format-white': type === 'primary-admin' && !disabled },
           { 'text-light-gray': type === 'primary' && disabled },
           { 'text-white': type === 'tertiary' },
-          { 'text-black': type === 'quaternary' },
+          { 'text-black image-icon-format-stroke': type === 'quaternary' },
           { 'text-warning': type === 'warning' }
         )}
       >
