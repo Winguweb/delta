@@ -75,12 +75,15 @@ export const DemoVessel: FC<{ lat: number, lng: number, setter: ((value: Coordin
         if (computeDistanceBetween({ lat, lng }, coordsCasa) <= 150) {
             if (!notificado) {
                 setNotificado(true);
-                new Notification("La lancha está cerca", { body: "Prepará tus bidones" })
+                new Notification(`Deltapp`, {
+                    icon: '/favicon.ico',
+                    body: `La embarcación ${name} está a 150 metros`
+                })
             }
         } else {
             setNotificado(false);
         }
-    }, [lat, lng, coordsCasa, notificado])
+    }, [lat, lng, coordsCasa, notificado, name])
 
 
     const isOnScreen = bounds !== null &&
