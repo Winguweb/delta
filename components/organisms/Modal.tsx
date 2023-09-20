@@ -39,17 +39,17 @@ export const Modal: React.FC<ModalProps> = ({
     <div
       className={classNames(className, 'modal-style ')}
       style={{ margin: '0px' }}
-      // ref={refOverlay}
-      // onClick={(e) => {
-      //   if (e.target === refOverlay.current) {
-      //     onClose?.();
-      //   }
-      // }}
+    // ref={refOverlay}
+    // onClick={(e) => {
+    //   if (e.target === refOverlay.current) {
+    //     onClose?.();
+    //   }
+    // }}
     >
       {logo && (
         <div className="w-full flex justify-center pb-8">
           <Image
-            src="/assets/Logo.svg"
+            src="/assets/LogoText.png"
             alt="Delta Logo White"
             height={58}
             width={200}
@@ -57,10 +57,9 @@ export const Modal: React.FC<ModalProps> = ({
         </div>
       )}
       <div
-        className={`relative my-6 mx-auto rounded-xl ${
-          width ? width : 'w-[30rem]'
-        }`}
-        onClick={() => {}}
+        className={`relative my-6 mx-auto rounded-xl ${width ? width : 'w-[30rem]'
+          }`}
+        onClick={() => { }}
       >
         <div
           className={` border-0 shadow-lg relative flex flex-col w-full outline-none focus:outline-none 

@@ -66,12 +66,12 @@ const SignIn: NextPage = (props) => {
         bg={'bg-main-image'}
       >
         <div className="w-1/2 hidden lg:flex justify-center">
-            <Image
-              src="/assets/Logo.svg"
-              alt="Delta Logo White"
-              height={68}
-              width={360}
-            />
+          <Image
+            src="/assets/LogoText.png"
+            alt="Delta Logo White"
+            height={68}
+            width={360}
+          />
         </div>
         <div className="w-full lg:w-1/2 flex justify-center lg:justify-start pb-6 lg:pb-0">
           <form

@@ -15,11 +15,11 @@ export const Marker = React.memo<MarkerProps>(
       <button
         className={classNames(
           className,
-          'bg-secondary p-1 rounded-full w-25 h-25 absolute -translate-x-1/2 -translate-y-full'
+          'p-1 rounded-full w-25 h-25 absolute -translate-x-1/2 -translate-y-1/2'
         )}
         onClick={onClick}
       >
-        <IconMarker/>
+        <IconMarker />
       </button>
     );
   }
