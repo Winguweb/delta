@@ -54,6 +54,7 @@ export async function createSample(
     });
     return sample;
   } catch (e) {
+    console.error(e)
     return null;
   }
 }
