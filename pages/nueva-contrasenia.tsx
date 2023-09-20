@@ -56,7 +56,7 @@ const schema = yup
   .required();
 
 const NewPasswordPage: NextPage = (props) => {
-  
+
   const [showModal, setShowModal] = useState<boolean>(false);
   const [response, setResponse] = useState(false);
   const [error, setError] = useState('');
@@ -132,7 +132,7 @@ const NewPasswordPage: NextPage = (props) => {
       >
         <div className="w-full lg:w-3/5 m-0 lg:mx-auto flex flex-col justify-center space-y-8">
           <Image
-            src="/assets/Logo.svg"
+            src="/assets/LogoText.png"
             alt="Delta Logo White"
             height={58}
             width={200}
@@ -239,7 +239,7 @@ const NewPasswordPage: NextPage = (props) => {
                 className={'bg-primary flex flex-col pt-12'}
               >
                 <div className="flex items-center justify-center flex-col px-[5rem] py-[1.5rem] ">
-                  <Icon size="small" icon={<CheckIcon />}/>
+                  <Icon size="small" icon={<CheckIcon />} />
                   <p className="text-center p-5">
                     La contraseña se cambio con éxito
                   </p>

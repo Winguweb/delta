@@ -29,15 +29,15 @@ const Links: React.FC<SidebarLinkProps> = ({
 
 	return (
 		<Link key={href} href={href} className='w-full text-center'>
-				<Button
-					icon={icon}
-					iconSize="small"
-					variant={selected ? 'primary-admin' : 'secondary'}
-					onClick={onClick}
-					className='rounded-md w-full'
-				>
-					{text}
-				</Button>
+			<Button
+				icon={icon}
+				iconSize="small"
+				variant={selected ? 'primary-admin' : 'secondary'}
+				onClick={onClick}
+				className='rounded-md w-full'
+			>
+				{text}
+			</Button>
 		</Link>
 	);
 };
@@ -68,7 +68,7 @@ function MobileHeader({ onMenuOpening: handleMenuOpening, links }: { onMenuOpeni
 					<Link href="/">
 						<span className="w-40">
 							<Image
-								src={'/assets/Logo.svg'}
+								src={'/assets/LogoText.png'}
 								alt="Delta Logo"
 								height={46}
 								width={159}
@@ -92,7 +92,7 @@ function MobileHeader({ onMenuOpening: handleMenuOpening, links }: { onMenuOpeni
 							<Link href="/" >
 								<span className='w-full flex justify-center'>
 									<Image
-										src={'/assets/Logo.svg'}
+										src={'/assets/LogoText.png'}
 										alt="Delta Logo"
 										height={66}
 										width={186}

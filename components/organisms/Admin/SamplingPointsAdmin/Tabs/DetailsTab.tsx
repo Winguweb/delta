@@ -16,11 +16,12 @@ import { useRouter } from "next/router";
 import { GetUserResponse } from "../../../../../model/user";
 import { IconPencil } from "../../../../../assets/icons";
 import { useAuthenticatedUser } from "../../../../../hooks/useAuthenticatedUser";
-import { UserRole } from "@prisma/client";
+import { User, UserRole } from "@prisma/client";
 
 type DetailsTabProps = {
     isAbleToPerformActions: boolean;
     samplingPoint: GetSamplingPointResponseWithSamples;
+    owner: Pick<User, 'id' | 'firstName' | 'lastName' | 'organizationName' | 'email'> 
 }
 
 
@@ -36,11 +37,11 @@ const initialErrors = {
 };
 
 
-export const DetailsTab = ({ isAbleToPerformActions, samplingPoint }: DetailsTabProps) => {
+export const DetailsTab = ({ isAbleToPerformActions, samplingPoint, owner }: DetailsTabProps) => {
 
     const [isEdit, setIsEdit] = useState(false)
 
-    const userData = samplingPoint.owner
+    const userData = owner;
 
     const router = useRouter()
 

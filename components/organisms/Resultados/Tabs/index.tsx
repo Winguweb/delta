@@ -4,9 +4,9 @@ import { ContentProp, Item } from '../Modals/DetailCard';
 import axios from 'axios';
 import Pagination from '../../../molecules/Pagination';
 import Text from '../../../molecules/Text';
-import { ActiveResult } from '../../../../pages/resultados';
 import { Button } from '../../../molecules/Buttons/Button';
 import { CloudArrowDownIcon } from '@heroicons/react/24/outline';
+import { ActiveResult } from '../../../../model/activeResult';
 
 interface TabHeaderProps {
   label: string;

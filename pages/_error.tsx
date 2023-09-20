@@ -24,7 +24,7 @@ const Error: NextPage<ErrorProps> = ({ statusCode }) => {
             <div className="bg-white p-8 rounded-lg shadow-lg text-center">
                 <div className="w-full flex justify-center pb-8">
                     <Image
-                        src="/assets/Logo.svg"
+                        src="/assets/LogoText.png"
                         alt="Delta Logo White"
                         height={58}
                         width={200}

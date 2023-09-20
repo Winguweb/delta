@@ -26,12 +26,20 @@ export interface GetSamplingPointResponseWithSamples extends GetSamplingPointRes
 
 interface ServerSideProps {
   samplingPoint: GetSamplingPointResponseWithSamples;
+  users: GetUserResponse[];
 }
 
 export const getServerSideProps: GetServerSideProps<ServerSideProps> = async (
   ctx
 ) => {
   const { id } = ctx.query;
+
+  const users = await (
+    await axiosFromServerSideProps(ctx)
+  )
+    .get(`/api/admin/users`, {
+    })
+    .then((res) => res.data);
 
   try {
     const samplingPointWithSamples: GetSamplingPointResponseWithSamples = await (await axiosFromServerSideProps(ctx))
@@ -48,14 +56,16 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async (
         return {
           ...samplingPoint,
           samples: samples,
+          users: JSON.parse(JSON.stringify(users)),
         };
       });
-
 
     return {
       props: {
         samplingPoint: JSON.parse(JSON.stringify(samplingPointWithSamples)),
+        users: JSON.parse(JSON.stringify(users)),
       },
+
     };
   } catch (error) {    
     return {
@@ -65,7 +75,7 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async (
   }
 };
 
-const EditSamplingPointPage: NextPage<ServerSideProps> = ({ samplingPoint }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const EditSamplingPointPage: NextPage<ServerSideProps> = ({ samplingPoint, users }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
 
   const user = useAuthenticatedUser();  
 
@@ -89,6 +99,7 @@ const EditSamplingPointPage: NextPage<ServerSideProps> = ({ samplingPoint }: Inf
                 key="datil-tab-content"
                 isAbleToPerformActions={isAbleToPerformActions}
                 samplingPoint={samplingPoint}
+                owner={users.find((user) => user.id == samplingPoint.ownerId)!}
               />,
               <SamplesTab
                 key="sample-tab-content"

@@ -61,7 +61,7 @@ const Sidebar: React.FC<{ links: SidebarLinkProps[] }> = ({ links }) => {
 			<Link href="/">
 				<span className="w-40">
 					<Image
-						src={'/assets/Logo.svg'}
+						src={'/assets/LogoText.png'}
 						alt="Delta Logo"
 						height={46}
 						width={159}

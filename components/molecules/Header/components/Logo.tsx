@@ -7,20 +7,20 @@ const Logo: React.FC = () => (
       {/* Mobile logo */}
       <span className="block lg:hidden">
         <Image
-          src={'/assets/LogoMobile.svg'}
+          src={'/assets/LogoText.png'}
           alt="Delta Logo"
-          height={57}
-          width={85}
+          height={100}
+          width={150}
         />
       </span>
 
       {/* Desktop logo */}
       <span className="hidden lg:block">
         <Image
-          src={'/assets/Logo.svg'}
+          src={'/assets/LogoText.png'}
           alt="Delta Logo"
-          height={57}
-          width={85}
+          height={100}
+          width={150}
           className="cursor-pointer"
         />
       </span>
