@@ -62,6 +62,7 @@
     "react-google-autocomplete": "^2.7.0",
     "react-hook-form": "^7.45.0",
     "react-loader-spinner": "^5.3.4",
+    "spherical-geometry-js": "^3.0.0",
     "swr": "^2.1.5",
     "ts-node": "^10.9.1",
     "yup": "^1.2.0",

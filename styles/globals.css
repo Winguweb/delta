@@ -91,10 +91,11 @@
   }
 
   .map-mobile-height {
-    height: calc(100vh - 158px) !important;
+    flex-grow: 1;
   }
+
   .map-desktop-height {
-    height: calc(100vh - 84px) !important;
+    flex-grow: 1;
   }
 
   .truncate-placeholder::placeholder {
