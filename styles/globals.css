@@ -25,8 +25,9 @@
   .input-style {
     @apply w-full h-12 rounded-md text-sm text-light-gray py-3 px-6 disabled:border-light-gray disabled:text-light-gray focus:text-black focus-within:text-black active:text-black active:border-black;
   }
+
   .select-style {
-    @apply border border-gray-300  text-gray-400 text-sm rounded-lg focus:ring-[#346AF0] focus:border-[#346AF0] block w-full p-1.5 focus:outline-none;
+    @apply border border-gray-300 text-gray-400 text-sm rounded-lg focus:ring-[#346AF0] focus:border-[#346AF0] block w-full p-1.5 focus:outline-none;
   }
 
   .admin-input {
@@ -48,6 +49,7 @@
   }
 
   .scrollbar-track::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
     -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
     background-color: #ffffff;
@@ -103,26 +105,34 @@
   }
 }
 
-.ProseMirror-focused{
+.ProseMirror-focused {
   outline: none !important;
   box-shadow: none !important;
   border-color: transparent !important;
 }
 
-.image-icon-format svg{
+.image-icon-format svg {
   width: 32px;
   height: 32px;
-  fill: black; /* Color de relleno */
-  stroke: #3C33FF; /* Color del contorno */
-  stroke-width: 1px; /* Grosor del contorno */
+  fill: black;
+  /* Color de relleno */
+  stroke: #3C33FF;
+  /* Color del contorno */
+  stroke-width: 1px;
+  /* Grosor del contorno */
 }
 
-.image-icon-format-white, .image-icon-format-white svg path{
-  stroke: white; /* Color del contorno */
-  stroke-width: 1.2px; /* Grosor del contorno */
+.image-icon-format-white,
+.image-icon-format-white svg path {
+  stroke: white;
+  /* Color del contorno */
+  stroke-width: 1.2px;
+  /* Grosor del contorno */
 }
-.image-icon-format-stroke svg path{
-  stroke-width: 1.5px; /* Grosor del contorno */
+
+.image-icon-format-stroke svg path {
+  stroke-width: 1.5px;
+  /* Grosor del contorno */
 }
 
 /* Estilos para el contenedor de la tabla */
@@ -132,27 +142,27 @@
 }
 
 /* Estilos para el thead */
-.table-admin thead tr{
+.table-admin thead tr {
   display: grid;
-  grid-template-columns: repeat(5, 1fr); 
+  grid-template-columns: repeat(5, 1fr);
 }
 
 /* Estilos para el tbody */
 .table-admin tbody {
   display: flex;
   flex-direction: column;
-  gap: 1rem; 
+  gap: 1rem;
 }
 
 /* Estilos para las filas (tr) del tbody */
 .table-admin tbody tr {
   border-radius: 16px;
-  background-color: white; 
+  background-color: white;
   display: flex;
 }
 
 /* Estilos para las celdas (td) de la tabla */
 .table-admin td {
-  flex: 1; 
+  flex: 1;
   padding: 1rem;
 }
