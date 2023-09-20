@@ -7,10 +7,13 @@ import Tabs from '../../Tabs';
 import Text from '../../../../molecules/Text';
 import { Icon } from '../../../../molecules/Icon';
 import { SAMPLE_PARAMETER_ICONS, SampleParameters } from '../../../../../config/samples';
-import { ActiveResult, DetailModes } from '../../../../../pages/resultados';
+
 import { GetSamplingPointResponse } from '../../../../../model/samplingPoint';
 import capitalize from '../../../../../utils/capitalize';
 import { Pill } from '../../../../atoms/Pill';
+import { IconInfo } from '../../../../../assets/icons';
+import { DetailModes } from '../../../../../model/detailModes';
+import { ActiveResult } from '../../../../../model/activeResult';
 
 export interface ContentProp {
   label: string;
@@ -47,7 +50,7 @@ export const Item: React.FC<ItemProps> = (props) => {
     return {
       name: key,
       value: sampleParameters[key],
-      icon: SAMPLE_PARAMETER_ICONS[key.split(' ')[0].toLowerCase()],
+      icon: SAMPLE_PARAMETER_ICONS[key.split(' ')[0].toLowerCase()] ?? <IconInfo />,
     };
 
   })
@@ -85,14 +88,16 @@ export const Item: React.FC<ItemProps> = (props) => {
               <Text as='p2' className='hidden lg:block text-dark-gray !font-normal'>
                 Ubicación
               </Text>
-              <Text as="p2" className='flex space-x-2' >
+              <div className='flex space-x-2' >
                 <Icon
                   size="xs"
                   className='lg:hidden block icon-image'
                   icon={<MapPinIcon />}
-                /> {location}
-                <span className='font-thin'>{distance}</span>
-              </Text>
+                />
+                <Text as="p2">
+                  {location} <span className='font-thin'>{distance}</span>
+                </Text>
+              </div>
             </div>
           }
 

@@ -5,11 +5,12 @@ import moment from 'moment';
 import axios from 'axios';
 import { GetSamplingPointResponseWithLastSample } from '../../../../../pages/api/sampling-points';
 import { GetSamplingPointResponse } from '../../../../../model/samplingPoint';
-import { DetailModes, MapPosition } from '../../../../../pages/resultados';
 import Text from '../../../../molecules/Text';
 import { formatMeasurementValues } from '../../../../../utils/formatMeasurementValues';
 import Loading from '../../../../atoms/Loading';
 import { isDesktop } from '../../../../../utils/isDesktop';
+import { DetailModes } from '../../../../../model/detailModes';
+import { MapPosition } from '../../../../../model/mapPosition';
 
 
 
@@ -102,7 +103,7 @@ const ResultsList: React.FC<ResultsListProps> = (props) => {
                 onClick={() => handleDetailsClick(result.id)}
               />
             );
-          })  
+          })
           : ''}
       </div>
       {!loading && results && !results.length ? (

@@ -59,7 +59,6 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async (
       props: {
         samplingPoint: JSON.parse(JSON.stringify(samplingPointWithSamples)),
         users: JSON.parse(JSON.stringify(users)),
-
       },
     };
   } catch (error) {
@@ -119,7 +118,7 @@ const EditSamplingPointPage: NextPage<ServerSideProps> = ({ samplingPoint, users
                 key="datil-tab-content"
                 isAbleToPerformActions={isAbleToPerformActions}
                 samplingPoint={samplingPoint}
-                users={users}
+                owner={users.find((user) => user.id == samplingPoint.ownerId)!}
               />,
               <SamplesTab
                 key="sample-tab-content"

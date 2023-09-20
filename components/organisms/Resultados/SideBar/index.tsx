@@ -2,8 +2,9 @@ import React from 'react';
 import ResultsList from './components/ResultList';
 import Toggle from './components/Toggle';
 import { GetSamplingPointResponse, GetSamplingPointsResponse } from '../../../../model/samplingPoint';
-import { DetailModes, MapPosition } from '../../../../pages/resultados';
 import Header from './components/Header';
+import { DetailModes } from '../../../../model/detailModes';
+import { MapPosition } from '../../../../model/mapPosition';
 
 interface SideBarProps {
   searchLocationParam?: string | string[];

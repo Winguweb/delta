@@ -6,7 +6,8 @@ import moment from 'moment';
 import capitalize from '../../../../../utils/capitalize';
 import { formatMeasurementValues } from '../../../../../utils/formatMeasurementValues';
 import IconButton from '../../../../molecules/Buttons/IconButton';
-import { ActiveResult, DetailModes } from '../../../../../pages/resultados';
+import { DetailModes } from '../../../../../model/detailModes';
+import { ActiveResult } from '../../../../../model/activeResult';
 
 interface ModalProps {
   detailModes: DetailModes;
@@ -25,7 +26,7 @@ const FullDetailModal = ({ activeResult, setActiveResult, detailModes, setDetail
       showFullDetail: !detailModes.showFullDetail
     }));
   };
-  
+
 
 
   return (
@@ -50,7 +51,7 @@ const FullDetailModal = ({ activeResult, setActiveResult, detailModes, setDetail
           },
           {
             label: "Histórico",
-            items: activeResult.samplesResponse?.samples.map((sample:any) => ({
+            items: activeResult.samplesResponse?.samples.map((sample: any) => ({
               sampleParameters: sample.measurementValues,
               date: moment(sample.takenAt).utc().format('DD/MM/yyyy HH:mm'),
             })),
@@ -116,13 +117,13 @@ const PreviewModal = ({ activeResult, detailModes, setDetailModes, mapVisibility
                 location: `${activeResult.latitude}, ${activeResult.longitude}`,
                 distance: activeResult.distance ? `a ${activeResult.distance}` : '',
                 description: activeResult.description ?? '',
-                owner:  activeResult.owner?.organizationName ?? 'Delta',
+                owner: activeResult.owner?.organizationName ?? 'Delta',
               },
             ],
           },
           {
             label: "Histórico",
-            items: activeResult.samplesResponse?.samples.map((sample:any) => ({
+            items: activeResult.samplesResponse?.samples.map((sample: any) => ({
               sampleParameters: sample.measurementValues,
               date: moment(sample.takenAt).utc().format('DD/MM/yyyy HH:mm'),
             })),
