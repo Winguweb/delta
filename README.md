@@ -13,6 +13,8 @@
 1. Install node dependencies.
    1. Run `nvm use` to configure the node version used by the app.
    2. Run `yarn install` to install all node dependencies.
+2. Generate or copy .env files
+   Do so on the `root` and `prisma` folders following the structure of both `example.env` files.
 2. Set up the database and run schema migrations.
    1. Run `docker-compose up -d` to bring up the database.
    2. Run `npx prisma db push` to run all schema migrations.
