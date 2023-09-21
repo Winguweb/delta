@@ -3,7 +3,7 @@ import '@fontsource/poppins';
 import axios from 'axios';
 import { SessionProvider } from 'next-auth/react';
 import Script from 'next/script';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { responseTransformer } from '../axios/transformers';
 import '../styles/globals.css';
 import { Header } from '../components/molecules/Header';
@@ -17,6 +17,17 @@ export default function MyApp({ Component, pageProps }) {
     setIsScrollDisabled(!isScrollDisabled);
   };
   const showScroll = isScrollDisabled ? 'overflow-hidden' : 'overflow-auto';
+
+  useEffect(() => {
+    if ("serviceWorker" in navigator) {
+      try {
+        navigator.serviceWorker.register("/sw.js").then((registration) => console.log('scope is: ', registration.scope))
+      } catch (error) {
+        console.error(`Registration failed with ${error}`);
+      }
+    }
+  }, []);
+
   return (
     <SessionProvider session={pageProps.session}>
       <div className={`min-h-screen flex flex-col ${showScroll}`}>
