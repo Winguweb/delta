@@ -1,12 +1,10 @@
 import { Bounds } from "google-map-react";
 import { FC, useEffect, useState } from "react";
-import { LatLngLike, computeDistanceBetween, computeLength } from "spherical-geometry-js";
-import { setSourceMapRange } from "typescript";
+import { computeDistanceBetween, computeLength } from "spherical-geometry-js";
 import { Coordinates } from "../../../model/map";
 import { Marker } from "../../molecules/Marker";
 
-
-
+const notificationDistance = 500 //meters
 const pingFreq = 1000 //ms
 
 class LanchaState {
@@ -60,7 +58,6 @@ export const DemoVessel: FC<{ lat: number, lng: number, setter: ((value: Coordin
 
     const [lancha, setLancha] = useState(new LanchaState(speed, path, total));
 
-
     useEffect(() => {
         const interval = setInterval(() => {
             const newPosition = lancha.avanzar();
@@ -72,13 +69,20 @@ export const DemoVessel: FC<{ lat: number, lng: number, setter: ((value: Coordin
     }, [])
 
     useEffect(() => {
-        if (computeDistanceBetween({ lat, lng }, coordsCasa) <= 150) {
+        if (computeDistanceBetween({ lat, lng }, coordsCasa) <= notificationDistance) {
             if (!notificado) {
                 setNotificado(true);
-                new Notification(`Deltapp`, {
-                    icon: '/favicon.ico',
-                    body: `La embarcación ${name} está a 150 metros`
-                })
+
+                Notification.requestPermission((result) => {
+                    if (result === 'granted') {
+                        navigator.serviceWorker.ready.then((registration) => {
+                            registration.showNotification('Deltapp', {
+                                icon: '/favicon.ico',
+                                body: `La embarcación ${name} está a ${notificationDistance} metros`
+                            });
+                        });
+                    }
+                });
             }
         } else {
             setNotificado(false);
