@@ -16,6 +16,7 @@ import { Coordinates } from '../model/map';
 import { MapPosition } from '../model/mapPosition';
 import { isBreakOrContinueStatement } from 'typescript';
 import { DemoVessel } from '../components/organisms/Demo/DemoVessel';
+import { areNotificationsSupported } from '../utils/notificationsSupport';
 
 const USER_MARKER_ID = 'USER_MARKER_ID';
 
@@ -170,7 +171,9 @@ const MapWithVehicles: NextPage<ServerSideProps> = ({ googleMapsApiKey }: InferG
 
 
   useEffect(() => {
-    Notification.requestPermission();
+    if (areNotificationsSupported()) {
+      Notification.requestPermission();
+    }
   }, []);
 
 
