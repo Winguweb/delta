@@ -3,6 +3,7 @@ import { FC, useEffect, useState } from "react";
 import { computeDistanceBetween, computeLength } from "spherical-geometry-js";
 import { Coordinates } from "../../../model/map";
 import { Marker } from "../../molecules/Marker";
+import { areNotificationsSupported } from "../../../utils/notificationsSupport";
 
 const notificationDistance = 500 //meters
 const pingFreq = 1000 //ms
@@ -66,9 +67,14 @@ export const DemoVessel: FC<{ lat: number, lng: number, setter: ((value: Coordin
         }, pingFreq);
 
         return () => clearInterval(interval);
-    }, [])
+    }, []);
+
+
 
     useEffect(() => {
+        if (!areNotificationsSupported()) {
+            return
+        }
         if (computeDistanceBetween({ lat, lng }, coordsCasa) <= notificationDistance) {
             if (!notificado) {
                 setNotificado(true);
