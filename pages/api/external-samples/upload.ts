@@ -6,6 +6,7 @@ import { prismaClient } from '../../../server/prisma/client';
 import availableMethodsHandler from '../../../utils/availableMethodsHandler';
 import { createSample } from '../../../utils/samples';
 import bcrypt from 'bcrypt';
+import { onSampleUpload } from '../../../server/notifier/appNotifierService';
 
 const handler: NextApiHandler = async (req, res) => {
   if (!availableMethodsHandler(req, res, ['POST'])) {
@@ -47,6 +48,7 @@ const handler: NextApiHandler = async (req, res) => {
 
   const sample = await createSample(device.id, device.samplingPointId, device.ownerId, body.latitude, body.longitude, body.measurementValues, body.takenAt);
   if (sample) {
+    await onSampleUpload({ ...sample });
     res.status(201).json(sample);
   } else {
     res.status(500).json({ error: 'Internal server error' });
