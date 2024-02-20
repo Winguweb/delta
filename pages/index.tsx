@@ -29,6 +29,9 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async (
     if (!googleMapsApiKey) {
       throw new Error('Environment variable not set: GOOGLE_MAPS_API_KEY');
     }
+    if (!webSocketURL) {
+      throw new Error('Environment variable not set: WEBSOCKET_URL');
+    }
 
     return {
       props: {
@@ -38,9 +41,7 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async (
     };
   } catch (e) {
     console.error(e);
-    return {
-      notFound: true,
-    };
+    throw new Error('Environment variables not found')
   }
 };
 
