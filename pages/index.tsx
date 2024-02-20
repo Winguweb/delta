@@ -17,6 +17,7 @@ const USER_MARKER_ID = 'USER_MARKER_ID';
 
 type ServerSideProps = {
   googleMapsApiKey: string;
+  webSocketURL: string
 };
 
 export const getServerSideProps: GetServerSideProps<ServerSideProps> = async (
@@ -24,6 +25,7 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async (
 ) => {
   try {
     const googleMapsApiKey = process.env.GOOGLE_MAPS_API_KEY;
+    const webSocketURL = process.env.WEBSOCKET_URL
     if (!googleMapsApiKey) {
       throw new Error('Environment variable not set: GOOGLE_MAPS_API_KEY');
     }
@@ -31,6 +33,7 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async (
     return {
       props: {
         googleMapsApiKey,
+        webSocketURL
       },
     };
   } catch (e) {
@@ -75,7 +78,7 @@ type Boat = {
   coordinates: Coordinates
 }
 
-const MapWithVehicles: NextPage<ServerSideProps> = ({ googleMapsApiKey }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const MapWithVehicles: NextPage<ServerSideProps> = ({ googleMapsApiKey, webSocketURL }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const router = useRouter();
   const coords = coordsCasa;
 
@@ -101,7 +104,7 @@ const MapWithVehicles: NextPage<ServerSideProps> = ({ googleMapsApiKey }: InferG
 
 
   useEffect(() => {
-    const ws = new WebSocket('ws:localhost:8080')
+    const ws = new WebSocket(webSocketURL)
 
     ws.onmessage = (msg) => {
       const boatData = JSON.parse(msg.data);
