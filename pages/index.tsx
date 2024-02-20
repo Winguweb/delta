@@ -112,11 +112,17 @@ const MapWithVehicles: NextPage<ServerSideProps> = ({ googleMapsApiKey, webSocke
 
       const boat = {id: boatData.deviceId, coordinates: { lat: boatData.latitude, lng: boatData.longitude }};
 
-      setBoats({...boats, [boat.id]: boat});
+      setBoats((prev:any) => {
+        return {...prev, [boat.id]: boat}
+      });
     };
 
     if (areNotificationsSupported()) {
       Notification.requestPermission();
+    }
+
+    return () => {
+      ws.close()
     }
   }, []);
 
