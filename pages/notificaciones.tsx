@@ -11,7 +11,6 @@ import { Button } from '../components/molecules/Buttons/Button';
 import { IconActualLocation } from '../assets/icons';
 import { SuccessModal } from '../components/organisms/Notifications/SuccessModal';
 import { NotifyOrderForm } from '../components/organisms/Notifications/NotifyOrderForm';
-import { getCurrentLocation } from '../utils/geolocationUtils';
 
 export type NotifyOrderFormValues = {
   telephone: string;
@@ -66,6 +65,23 @@ const ActivateNotifications: NextPage<ServerSideProps> = ({ googleMapsApiKey }: 
   const form = useForm<NotifyOrderFormValues>({
     resolver: yupResolver(schema),
   });
+
+  function getCurrentLocation(callback: (coords: Coordinates) => void, setError: (message: string) => void): void {
+    navigator.geolocation.getCurrentPosition(
+      (position: GeolocationPosition) => {
+        const { coords } = position;
+        const { latitude: lat, longitude: lng } = coords;
+        callback({ lat, lng });
+      },
+      (error: GeolocationPositionError) =>
+        setError('Debe permitir el acceso a la ubicación para usar esta función'),
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0,
+      },
+    );
+  }
 
   useEffect(() => {
     getCurrentLocation((coords) => setUserLocation(coords), () => {
