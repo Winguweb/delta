@@ -11,6 +11,7 @@ import { Marker, UserMarker } from '../components/molecules/Marker';
 
 import { Coordinates } from '../model/map';
 import { MapPosition } from '../model/mapPosition';
+import { getCurrentLocation } from '../utils/geolocationUtils';
 import { areNotificationsSupported } from '../utils/notificationsSupport';
 
 const USER_MARKER_ID = 'USER_MARKER_ID';
@@ -48,23 +49,6 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async (
 
 const defaultZoom = 15;
 
-function getCurrentLocation(callback: (coords: Coordinates) => void, setError: (message: string) => void): void {
-  navigator.geolocation.getCurrentPosition(
-    (position: GeolocationPosition) => {
-      const { coords } = position;
-      const { latitude: lat, longitude: lng } = coords;
-      callback({ lat, lng });
-    },
-    (error: GeolocationPositionError) =>
-      // console.warn('ERROR(' + error.code + '): ' + error.message),
-      setError("Debe permitir el acceso a la ubicación para usar esta función"),
-    {
-      enableHighAccuracy: true,
-      timeout: 10000,
-      maximumAge: 0,
-    }
-  );
-}
 const coordsCasa = { lat: -34.415431, lng: -58.567856 };
 
 const getMapPosition = (coords: Coordinates | undefined): MapPosition => {
@@ -93,14 +77,8 @@ const MapWithVehicles: NextPage<ServerSideProps> = ({ googleMapsApiKey, webSocke
     if (!router.isReady) {
       return;
     }
-    if (coords) {
-      // Sin el setTimeout no funciona el ruteo, no pudimos encontrar el motivo
-      setTimeout(() => {
-        setMapPosition(getMapPosition(coords));
-      }, 0);
-    } else {
       getCurrentLocation((coords) => setMapPosition(getMapPosition(coords)), setError);
-    }
+
   }, [router.isReady, coords]);
 
 
