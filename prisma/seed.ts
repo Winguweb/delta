@@ -241,6 +241,13 @@ async function main() {
       }
     },
   });
+  await prismaClient.notifyOrder.create({
+    data: {
+      telephone: "1131747225",
+      latitude: -34.62994536,
+      longitude: -58.39187918,
+    }
+  })
 }
 
 main()

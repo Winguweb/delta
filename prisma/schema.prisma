@@ -166,3 +166,11 @@ model Change {
   details     Json?
   createdAt   DateTime @default(now())
 }
+
+model NotifyOrder {
+  id          String @id @default(uuid()) @db.Uuid
+  telephone   String          @db.VarChar(100)
+  latitude    Float
+  longitude   Float
+  createdAt   DateTime @default(now())
+}
