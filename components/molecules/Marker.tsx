@@ -11,7 +11,7 @@ export type MarkerProps = {
 };
 
 export const Marker = React.memo<MarkerProps>(
-  ({ lat, lng, className, onClick }) => {
+  ({ lat, lng, className, onClick , name, showInfoWindow}) => {
     return (
       <button
         className={classNames(
@@ -20,7 +20,10 @@ export const Marker = React.memo<MarkerProps>(
         )}
         onClick={onClick}
       >
-        <IconMarker />
+          {showInfoWindow && <div className='info-window'>
+              {`Nombre: ${name}`}
+          </div>}
+          <IconMarker />
       </button>
     );
   }

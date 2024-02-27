@@ -61,7 +61,8 @@ const getMapPosition = (coords: Coordinates | undefined): MapPosition => {
 
 type Boat = {
   id: number,
-  coordinates: Coordinates
+  coordinates: Coordinates,
+  name: string
 }
 
 const MapWithVehicles: NextPage<ServerSideProps> = ({ googleMapsApiKey, webSocketURL }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
@@ -71,6 +72,7 @@ const MapWithVehicles: NextPage<ServerSideProps> = ({ googleMapsApiKey, webSocke
   const [mapPosition, setMapPosition] = useState<MapPosition | null>(null);
   const [error, setError] = useState('')
   const [bounds, setBounds] = useState<Bounds | null>(null);
+  const [showInfoWindow, setShowInfoWindow] = useState<Boolean>(false)
 
   const [boats, setBoats] = useState<Map<number, Boat>>(new Map())
 
@@ -78,7 +80,7 @@ const MapWithVehicles: NextPage<ServerSideProps> = ({ googleMapsApiKey, webSocke
     if (!router.isReady) {
       return;
     }
-      getCurrentLocation((coords) => setMapPosition(getMapPosition(coords)), setError);
+      getCurrentLocation((coords) => setMapPosition(getMapPosition(coordsCasa)), setError);
 
   }, [router.isReady, coords]);
 
@@ -89,7 +91,7 @@ const MapWithVehicles: NextPage<ServerSideProps> = ({ googleMapsApiKey, webSocke
     ws.onmessage = (msg) => {
       const boatData = JSON.parse(msg.data);
 
-      const boat = {id: boatData.deviceId, coordinates: { lat: boatData.latitude, lng: boatData.longitude }};
+      const boat = {id: boatData.deviceId, coordinates: { lat: boatData.latitude, lng: boatData.longitude }, name: boatData.name};
 
       setBoats((prev:any) => {
         return {...prev, [boat.id]: boat}
@@ -166,7 +168,10 @@ const MapWithVehicles: NextPage<ServerSideProps> = ({ googleMapsApiKey, webSocke
                       key={boat.id}
                       lat={boat.coordinates.lat}
                       lng={boat.coordinates.lng}
+                      name={boat.name}
+                      showInfoWindow={showInfoWindow}
                       onClick={() => {
+                        setShowInfoWindow(!showInfoWindow)
                       }}
                   />)}
             </GoogleMapReact>
