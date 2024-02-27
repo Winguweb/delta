@@ -13,6 +13,7 @@ import { Coordinates } from '../model/map';
 import { MapPosition } from '../model/mapPosition';
 import { getCurrentLocation } from '../utils/geolocationUtils';
 import { areNotificationsSupported } from '../utils/notificationsSupport';
+import { IconNotification } from '../assets/icons/IconNotification';
 
 const USER_MARKER_ID = 'USER_MARKER_ID';
 
@@ -112,6 +113,12 @@ const MapWithVehicles: NextPage<ServerSideProps> = ({ googleMapsApiKey, webSocke
       <Head>
         <title>Delta - Puntos de toma</title>
       </Head>
+
+      <Link href="/notificaciones"className="fixed lg:bottom-8 lg:right-8 bottom-4 right-1 m-4 z-40">
+        <div  className="bg-white rounded-full p-5 shadow-lg hover:shadow-xl">
+          <IconNotification/>
+        </div>
+      </Link>
 
       {error !== '' &&
         <div className="w-full flex flex-col items-center">
