@@ -11,7 +11,6 @@ const handler: NextApiHandler = async (req, res) => {
   if (req.method === 'POST') {
     try {
       let notifyOrderData = await createNotifyOrderSchema.validate(req.body, { abortEarly: false });
-      console.log(notifyOrderData);
 
       await prismaClient.notifyOrder.create({
         data: {
