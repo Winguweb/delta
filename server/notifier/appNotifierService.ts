@@ -4,7 +4,7 @@ const http = axios.create({
   baseURL: process.env.NOTIFIER_URL,
 });
 
-export async function onSampleUpload(sample) {
+export async function onSampleUpload(sample: any) {
   try {
     const token = await authenticate();
     const headers = { 'Authorization': 'Bearer ' + token };
