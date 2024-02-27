@@ -17,7 +17,7 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({ showModal }) => {
       <h2 className="text-xl font-semibold p-2">¡Gracias!</h2>
       <p className="text-center">
         Has completado correctamente la solicitud, ahora recibirás notificaciones por WhatsApp cuando tu
-        servicio esté a menos de 500 metros
+        servicio esté cerca de la ubicación cargada
       </p>
       <div className="pb-4 lg:pt-3 flex justify-center ">
         <button
