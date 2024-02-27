@@ -34,16 +34,42 @@ async function authenticate() {
   }
 }
 
-// todo: notify users
-// todo: do not notify already notified users
-
 async function findUsersToNotify(coords: DeviceCoordinates) {
-  const users = await prismaClient.notifyOrder.findMany({});
-  console.log(users);
+  const firstHourToday = new Date();
+  firstHourToday.setHours(-3, 0, 0, 0);
+  const users = await prismaClient.notifyOrder.findMany({
+    where: {
+      OR: [
+        {
+          lastNotifiedAt: null,
+        },
+        {
+          lastNotifiedAt: {
+            lte: firstHourToday,
+          },
+        },
+      ],
+    },
+  });
   users.forEach(user => {
-    const distance = computeDistanceBetween({ lat: coords.latitude, lng: coords.longitude }, { lat: user.latitude, lng: user.longitude });
-    if(distance <= MIN_DISTANCE) {
-      console.log("Notify user")
+    const distance = computeDistanceBetween({ lat: coords.latitude, lng: coords.longitude }, {
+      lat: user.latitude,
+      lng: user.longitude,
+    });
+    if (distance <= MIN_DISTANCE) {
+      console.log('[NotifierService] sending WhatsApp notification');
     }
+  });
+  const today = new Date();
+  today.setHours(today.getHours() - 3);
+  await prismaClient.notifyOrder.updateMany({
+    where: {
+      id: {
+        in: users.map(user => user.id),
+      },
+    },
+    data: {
+      lastNotifiedAt: today,
+    },
   });
 }
