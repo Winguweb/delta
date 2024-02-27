@@ -48,13 +48,12 @@ export const NotifyOrderForm: React.FC<NotifyOrderFormProps> = ({ form, setShowM
                 Activar notificaciones
               </Text>
               <p>
-                Podemos enviarte una notificación por WhatsApp cuando tu servicio se encuentre a menos de 500
-                metros.
+                Podemos enviarte una notificación por WhatsApp cuando tu servicio se encuentre cerca de tu ubicación.
               </p>
               <div className="mb-6">
                 <label
                   htmlFor="telephone"
-                  className="block mb-2"
+                  className="block mb-2 font-semibold"
                 >
                   Número de teléfono
                 </label>

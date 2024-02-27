@@ -12,6 +12,7 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({ showModal }) => {
   return <Modal
     showModal={showModal}
     className={'flex flex-col pt-12'}
+    width={'w-full'}
   >
     <div className="flex items-center justify-center flex-col px-2 space-y-4 mt-4">
       <h2 className="text-xl font-semibold p-2">¡Gracias!</h2>
