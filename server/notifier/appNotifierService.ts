@@ -4,6 +4,7 @@ import { prismaClient } from '../prisma/client';
 import { computeDistanceBetween } from 'spherical-geometry-js';
 import { MIN_DISTANCE } from './notifierConfig';
 import { nowWithTimezone, todayAtStartOfDayWithTimezone } from '../../utils/dates';
+import { sendWhatsappNotification } from './whatsappService';
 
 const http = axios.create({
   baseURL: process.env.NOTIFIER_URL,
@@ -51,20 +52,22 @@ async function findUsersToNotify(coords: DeviceCoordinates) {
       ],
     },
   });
+  const usersNotified: string[] = [];
   users.forEach(user => {
     const distance = computeDistanceBetween({ lat: coords.latitude, lng: coords.longitude }, {
       lat: user.latitude,
       lng: user.longitude,
     });
     if (distance <= MIN_DISTANCE) {
-      console.log('[NotifierService] sending WhatsApp notification');
+      sendWhatsappNotification(user.telephone);
+      usersNotified.push(user.id);
     }
   });
   const today = nowWithTimezone();
   await prismaClient.notifyOrder.updateMany({
     where: {
       id: {
-        in: users.map(user => user.id),
+        in: usersNotified,
       },
     },
     data: {
