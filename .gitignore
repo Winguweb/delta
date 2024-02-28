@@ -105,3 +105,6 @@ dist
 
 pgadmin-data
 **/.DS_Store
+
+# postgres
+data/

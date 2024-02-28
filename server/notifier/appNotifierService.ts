@@ -10,19 +10,30 @@ const http = axios.create({
   baseURL: process.env.NOTIFIER_URL,
 });
 
-export async function onSampleUpload(coordinates: DeviceCoordinates) {
+type Sample = {
+  id: number,
+  name: string,
+  samplingPointId: string,
+  deviceId: number,
+  latitude: number,
+  longitude: number,
+  takenById: string,
+  takenAt: Date
+}
+
+export async function onSampleUpload(sample: Sample) {
   try {
-    await findUsersToNotify(coordinates);
+    await findUsersToNotify({ deviceId: sample.deviceId, latitude: sample.latitude, longitude: sample.longitude });
     const token = await authenticate();
     const headers = { 'Authorization': 'Bearer ' + token };
     const res = await http.post(
       '/onUpdate',
-      coordinates,
+      sample,
       { headers: headers },
     );
     return res.data;
   } catch (err: any) {
-    console.error('[NotifierService] error:', err.response.data.error);
+    console.error('[NotifierService] error:', err);
   }
 }
 
@@ -32,7 +43,7 @@ async function authenticate() {
     const res = await http.post('/auth', body);
     return res.data.token;
   } catch (err: any) {
-    console.error('[NotifierService][Auth] error:', err.response.data.error);
+    console.error('[NotifierService][Auth] error:', err);
   }
 }
 

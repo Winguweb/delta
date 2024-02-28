@@ -48,7 +48,7 @@ const handler: NextApiHandler = async (req, res) => {
 
   const sample = await createSample(device.id, device.samplingPointId, device.ownerId, body.latitude, body.longitude, body.measurementValues, body.takenAt);
   if (sample) {
-    await onSampleUpload({ ...sample });
+    await onSampleUpload({ ...sample, name: device.name });
     res.status(201).json(sample);
   } else {
     res.status(500).json({ error: 'Internal server error' });
