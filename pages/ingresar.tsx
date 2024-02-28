@@ -42,7 +42,6 @@ const SignIn: NextPage = (props) => {
   } = useForm<FormValues>({ resolver: yupResolver(schema) });
 
   const handleSignIn = async (data: FormValues) => {
-    debugger;
     const res = await signIn('credentials', {
       email: data.email,
       password: data.password,
