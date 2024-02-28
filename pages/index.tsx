@@ -14,6 +14,7 @@ import { MapPosition } from '../model/mapPosition';
 import { getCurrentLocation } from '../utils/geolocationUtils';
 import { areNotificationsSupported } from '../utils/notificationsSupport';
 import { IconNotification } from '../assets/icons/IconNotification';
+import moment from "moment";
 
 const USER_MARKER_ID = 'USER_MARKER_ID';
 
@@ -62,7 +63,8 @@ const getMapPosition = (coords: Coordinates | undefined): MapPosition => {
 type Boat = {
   id: number,
   coordinates: Coordinates,
-  name: string
+  name: string,
+  takenAt: Date
 }
 
 const MapWithVehicles: NextPage<ServerSideProps> = ({ googleMapsApiKey, webSocketURL }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
@@ -91,7 +93,12 @@ const MapWithVehicles: NextPage<ServerSideProps> = ({ googleMapsApiKey, webSocke
     ws.onmessage = (msg) => {
       const boatData = JSON.parse(msg.data);
 
-      const boat = {id: boatData.deviceId, coordinates: { lat: boatData.latitude, lng: boatData.longitude }, name: boatData.name};
+      const boat = {
+        id: boatData.deviceId,
+        coordinates: { lat: boatData.latitude, lng: boatData.longitude },
+        name: boatData.name,
+        takenAt: moment(boatData.takenAt, 'YYYY-MM-DD HH:mm'),
+      };
 
       setBoats((prev:any) => {
         return {...prev, [boat.id]: boat}
@@ -169,6 +176,7 @@ const MapWithVehicles: NextPage<ServerSideProps> = ({ googleMapsApiKey, webSocke
                       lat={boat.coordinates.lat}
                       lng={boat.coordinates.lng}
                       name={boat.name}
+                      takenAt={boat.takenAt}
                       showInfoWindow={showInfoWindow}
                       onClick={() => {
                         setShowInfoWindow(!showInfoWindow)

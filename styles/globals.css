@@ -178,3 +178,7 @@
   font-size: 10px;
   white-space: nowrap;
 }
+
+.window-title {
+  font-weight: bold;
+}
