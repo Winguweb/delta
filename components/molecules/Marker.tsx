@@ -9,10 +9,13 @@ export type MarkerProps = {
   lng: number;
   className?: string;
   onClick?: MouseEventHandler;
+  name?: string;
+  showInfoWindow?: Boolean;
+  takenAt?: Date;
 };
 
 export const Marker = React.memo<MarkerProps>(
-  ({ lat, lng, className, onClick , name, showInfoWindow, takenAt}) => {
+  ({ lat, lng, className, onClick , name, showInfoWindow = false, takenAt}) => {
     return (
       <button
         className={classNames(
@@ -23,7 +26,7 @@ export const Marker = React.memo<MarkerProps>(
       >
           {showInfoWindow && <div className='info-window'>
               <p className='window-title'>{name}</p>
-              <p>hace {getTimeDifference(takenAt)}</p>
+              <p>hace {getTimeDifference(takenAt!)}</p>
           </div>}
           <IconMarker />
       </button>
@@ -46,7 +49,7 @@ export const LocationMarker = React.memo<MarkerProps>(
   }
 );
 
-const getTimeDifference = (takenAt: moment) => {
+const getTimeDifference = (takenAt: Date) => {
     const now = moment();
 
     const duration = moment.duration(now.diff(takenAt));
