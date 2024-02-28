@@ -35,23 +35,6 @@ services:
       - db
     restart: unless-stopped
 
-  notifier:
-    container_name: notifier
-    build:
-      context: .
-      dockerfile: NotifierDockerfile
-      target: deploy
-    env_file:
-      - ./.env
-      - ./prisma/.env
-    ports:
-      - ${NOTIFIER_PORT}:${NOTIFIER_PORT}
-    networks:
-      - delta-nw
-    depends_on:
-      - app
-    restart: unless-stopped
-
   pgadmin:
     image: dpage/pgadmin4
     container_name: delta-pgadmin
