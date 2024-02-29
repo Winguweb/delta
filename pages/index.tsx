@@ -14,6 +14,7 @@ import { MapPosition } from '../model/mapPosition';
 import { getCurrentLocation } from '../utils/geolocationUtils';
 import { areNotificationsSupported } from '../utils/notificationsSupport';
 import { IconNotification } from '../assets/icons/IconNotification';
+import moment from "moment";
 
 const USER_MARKER_ID = 'USER_MARKER_ID';
 
@@ -61,7 +62,9 @@ const getMapPosition = (coords: Coordinates | undefined): MapPosition => {
 
 type Boat = {
   id: number,
-  coordinates: Coordinates
+  coordinates: Coordinates,
+  name: string,
+  takenAt: Date
 }
 
 const MapWithVehicles: NextPage<ServerSideProps> = ({ googleMapsApiKey, webSocketURL }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
@@ -71,6 +74,7 @@ const MapWithVehicles: NextPage<ServerSideProps> = ({ googleMapsApiKey, webSocke
   const [mapPosition, setMapPosition] = useState<MapPosition | null>(null);
   const [error, setError] = useState('')
   const [bounds, setBounds] = useState<Bounds | null>(null);
+  const [showInfoWindow, setShowInfoWindow] = useState<Boolean>(false)
 
   const [boats, setBoats] = useState<Map<number, Boat>>(new Map())
 
@@ -78,7 +82,7 @@ const MapWithVehicles: NextPage<ServerSideProps> = ({ googleMapsApiKey, webSocke
     if (!router.isReady) {
       return;
     }
-      getCurrentLocation((coords) => setMapPosition(getMapPosition(coords)), setError);
+      getCurrentLocation((coords) => setMapPosition(getMapPosition(coordsCasa)), setError);
 
   }, [router.isReady, coords]);
 
@@ -89,7 +93,12 @@ const MapWithVehicles: NextPage<ServerSideProps> = ({ googleMapsApiKey, webSocke
     ws.onmessage = (msg) => {
       const boatData = JSON.parse(msg.data);
 
-      const boat = {id: boatData.deviceId, coordinates: { lat: boatData.latitude, lng: boatData.longitude }};
+      const boat = {
+        id: boatData.deviceId,
+        coordinates: { lat: boatData.latitude, lng: boatData.longitude },
+        name: boatData.name,
+        takenAt: moment(boatData.takenAt, 'YYYY-MM-DD HH:mm'),
+      };
 
       setBoats((prev:any) => {
         return {...prev, [boat.id]: boat}
@@ -166,7 +175,11 @@ const MapWithVehicles: NextPage<ServerSideProps> = ({ googleMapsApiKey, webSocke
                       key={boat.id}
                       lat={boat.coordinates.lat}
                       lng={boat.coordinates.lng}
+                      name={boat.name}
+                      takenAt={boat.takenAt}
+                      showInfoWindow={showInfoWindow}
                       onClick={() => {
+                        setShowInfoWindow(!showInfoWindow)
                       }}
                   />)}
             </GoogleMapReact>

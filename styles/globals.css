@@ -167,3 +167,18 @@
   flex: 1;
   padding: 1rem;
 }
+
+.info-window {
+  background: white;
+  text-align: center;
+  padding: 4px;
+  position: absolute;
+  bottom: 40px;
+  left: -40px;
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.window-title {
+  font-weight: bold;
+}
