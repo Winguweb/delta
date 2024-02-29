@@ -46,6 +46,7 @@ services:
       - ./prisma/.env
     ports:
       - ${NOTIFIER_PORT}:${NOTIFIER_PORT}
+      - ${WEBSOCKET_PORT}:${WEBSOCKET_PORT}
     networks:
       - delta-nw
     depends_on:
