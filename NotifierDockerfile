@@ -1,17 +1,17 @@
 FROM node:18.16-alpine AS dependencies
 
 WORKDIR /notifier
-COPY delta_notifier/package.json delta_notifier/yarn.lock ./
-RUN yarn
+COPY notifier/package.json ./
+RUN npm install
 
 
 ##
 FROM node:18.16-alpine AS build
 
 WORKDIR /notifier
-COPY delta_notifier ./
+COPY notifier ./
 RUN apk add --update --no-cache openssl
-RUN yarn install
+RUN npm install
 
 ###
 FROM node:18.16-alpine AS deploy
@@ -20,7 +20,7 @@ WORKDIR /notifier
 
 ENV NODE_ENV production
 
-COPY delta_notifier ./
+COPY notifier ./
 
 EXPOSE 3001
 
