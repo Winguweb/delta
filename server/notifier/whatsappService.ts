@@ -11,7 +11,7 @@ export async function sendWhatsappNotification(telephone: string) {
       '/messages',
       {
         'messaging_product': 'whatsapp',
-        to: telephone,
+        to: '54' + telephone,
         type: 'template',
         template: {
           name: 'deltapp',

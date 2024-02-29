@@ -5,3 +5,15 @@ export function formatDate(date: Date) {
     year: 'numeric',
   });
 }
+
+export function nowWithTimezone() {
+  const today = new Date();
+  today.setHours(today.getHours() - 3);
+  return today;
+}
+
+export function todayAtStartOfDayWithTimezone() {
+  const firstHourToday = new Date();
+  firstHourToday.setHours(-3, 0, 0, 0);
+  return firstHourToday;
+}
