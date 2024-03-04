@@ -1,3 +1,5 @@
+import moment from 'moment/moment';
+
 export function formatDate(date: Date) {
   return date.toLocaleDateString('es-AR', {
     day: '2-digit',
@@ -16,4 +18,8 @@ export function todayAtStartOfDayWithTimezone() {
   const firstHourToday = new Date();
   firstHourToday.setHours(-3, 0, 0, 0);
   return firstHourToday;
+}
+
+export function atStartOfHoursAgoISO(hours: number) {
+  return moment().startOf('hour').subtract(hours, 'hour').toISOString();
 }
