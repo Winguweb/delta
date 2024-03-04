@@ -7,7 +7,6 @@ RUN yarn
 
 ##
 FROM node:18.16-alpine AS build
-
 WORKDIR /app
 COPY --from=dependencies /app/node_modules ./node_modules
 COPY . .
@@ -20,6 +19,7 @@ RUN yarn build
 FROM node:18.16-alpine AS deploy
 
 WORKDIR /app
+RUN apk add --no-cache bash
 
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1

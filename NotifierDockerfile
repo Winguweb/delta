@@ -1,26 +1,28 @@
 FROM node:18.16-alpine AS dependencies
 
 WORKDIR /notifier
-COPY notifier/package.json ./
-RUN npm install
+COPY /notifier/package.json notifier/yarn.lock ./
+RUN yarn --cwd notifier install 
 
 
 ##
 FROM node:18.16-alpine AS build
-
 WORKDIR /notifier
-COPY notifier ./
-RUN apk add --update --no-cache openssl
-RUN npm install
+COPY --from=dependencies /notifier/node_modules ./node_modules
+COPY /notifier .
+RUN yarn --cwd notifier install 
 
 ###
 FROM node:18.16-alpine AS deploy
 
 WORKDIR /notifier
+COPY /notifier .
+RUN apk add --no-cache bash
 
 ENV NODE_ENV production
 
-COPY notifier ./
+COPY --from=build /notifier/package.json ./package.json
+COPY --from=build /notifier/node_modules ./node_modules
 
 EXPOSE 3001
 
