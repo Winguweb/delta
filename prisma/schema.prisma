@@ -80,6 +80,7 @@ model Device {
   description     String?        @db.VarChar(280)
   components      String?        @db.VarChar(280)
   apiKey          String?        @db.VarChar(100)
+  externalId      String?        @unique @db.VarChar(100)
   samplingPoint   SamplingPoint? @relation(fields: [samplingPointId], references: [id])
   samplingPointId String?        @db.Uuid
   owner           User           @relation(fields: [ownerId], references: [id])
@@ -121,8 +122,8 @@ model SampleParameter {
 
 model Sample {
   id                Int                      @id @default(autoincrement())
-  samplingPoint     SamplingPoint            @relation(fields: [samplingPointId], references: [id])
-  samplingPointId   String                   @db.Uuid
+  samplingPoint     SamplingPoint?            @relation(fields: [samplingPointId], references: [id])
+  samplingPointId   String?                   @db.Uuid
   device            Device                   @relation(fields: [deviceId], references: [id])
   deviceId          Int
   latitude          Float
