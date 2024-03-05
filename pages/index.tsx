@@ -15,20 +15,29 @@ import { getCurrentLocation } from '../utils/geolocationUtils';
 import { areNotificationsSupported } from '../utils/notificationsSupport';
 import { IconNotification } from '../assets/icons/IconNotification';
 import moment from "moment";
+import axiosFromServerSideProps from '../utils/axiosFromServerSideProps';
 
 const USER_MARKER_ID = 'USER_MARKER_ID';
 
 type ServerSideProps = {
   googleMapsApiKey: string;
   webSocketURL: string
+  currentBoats: Map<number, Boat>;
 };
 
 export const getServerSideProps: GetServerSideProps<ServerSideProps> = async (
-  ctx
+  ctx,
 ) => {
   try {
     const googleMapsApiKey = process.env.GOOGLE_MAPS_API_KEY;
-    const webSocketURL = process.env.WEBSOCKET_URL
+    const webSocketURL = process.env.WEBSOCKET_URL;
+    const currentBoats = await (
+      await axiosFromServerSideProps(ctx)
+    )
+      .get('/api/external-samples?lastHour=true')
+      .then(data => JSON.parse(JSON.stringify(
+        data.data.samples.map((sample: any) => parseBoat({ ...sample, name: sample.device.name })))));
+
     if (!googleMapsApiKey) {
       throw new Error('Environment variable not set: GOOGLE_MAPS_API_KEY');
     }
@@ -39,7 +48,8 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async (
     return {
       props: {
         googleMapsApiKey,
-        webSocketURL
+        webSocketURL,
+        currentBoats,
       },
     };
   } catch (e) {
@@ -60,14 +70,27 @@ const getMapPosition = (coords: Coordinates | undefined): MapPosition => {
   return { coords: coordsCasa, zoom: defaultZoom };
 };
 
+const parseBoat = (deviceSample: any): Boat => {
+  return {
+    id: deviceSample.deviceId,
+    coordinates: { lat: deviceSample.latitude, lng: deviceSample.longitude },
+    name: deviceSample.name,
+    takenAt: moment(deviceSample.takenAt, 'YYYY-MM-DD HH:mm'),
+  };
+};
+
 type Boat = {
   id: number,
   coordinates: Coordinates,
   name: string,
-  takenAt: Date
+  takenAt: any
 }
 
-const MapWithVehicles: NextPage<ServerSideProps> = ({ googleMapsApiKey, webSocketURL }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const MapWithVehicles: NextPage<ServerSideProps> = ({
+                                                      googleMapsApiKey,
+                                                      webSocketURL,
+                                                      currentBoats,
+                                                    }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const router = useRouter();
   const coords = coordsCasa;
 
@@ -76,13 +99,13 @@ const MapWithVehicles: NextPage<ServerSideProps> = ({ googleMapsApiKey, webSocke
   const [bounds, setBounds] = useState<Bounds | null>(null);
   const [showInfoWindow, setShowInfoWindow] = useState<Boolean>(false)
 
-  const [boats, setBoats] = useState<Map<number, Boat>>(new Map())
+  const [boats, setBoats] = useState<Map<number, Boat>>(currentBoats);
 
   useEffect(() => {
     if (!router.isReady) {
       return;
     }
-      getCurrentLocation((coords) => setMapPosition(getMapPosition(coordsCasa)), setError);
+    getCurrentLocation((coords) => setMapPosition(getMapPosition(coords)), setError);
 
   }, [router.isReady, coords]);
 
@@ -91,14 +114,7 @@ const MapWithVehicles: NextPage<ServerSideProps> = ({ googleMapsApiKey, webSocke
     const ws = new WebSocket(webSocketURL)
 
     ws.onmessage = (msg) => {
-      const boatData = JSON.parse(msg.data);
-
-      const boat = {
-        id: boatData.deviceId,
-        coordinates: { lat: boatData.latitude, lng: boatData.longitude },
-        name: boatData.name,
-        takenAt: moment(boatData.takenAt, 'YYYY-MM-DD HH:mm'),
-      };
+      const boat = parseBoat(JSON.parse(msg.data));
 
       setBoats((prev:any) => {
         return {...prev, [boat.id]: boat}
