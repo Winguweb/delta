@@ -13,7 +13,7 @@ const http = axios.create({
 type Sample = {
   id: number,
   name: string,
-  samplingPointId: string,
+  samplingPointId: string | null,
   deviceId: number,
   latitude: number,
   longitude: number,

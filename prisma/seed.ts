@@ -116,6 +116,7 @@ async function main() {
     data: {
       name: 'Módulo de prueba',
       description: 'Este es un módulo de prueba',
+      externalId: 'PROMUSAT_TESTLOCAL_4673124',
       components: 'ESP32 / Gravity Analog pH Sensor/ Gravity Analog Electrical Conductivity Sensor / DS18B20',
       samplingPoint: {
         connect: {
