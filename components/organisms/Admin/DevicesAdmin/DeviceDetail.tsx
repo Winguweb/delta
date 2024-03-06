@@ -17,6 +17,7 @@ import { useAuthenticatedUser } from '../../../../hooks/useAuthenticatedUser';
 
 const deviceSchema = z.object({
   name: z.string().min(3, 'El nombre es requerido').max(100, 'El nombre puede tener un máximo de 100 caracteres'),
+  externalId: z.string().max(100, 'El externalId puede tener un máximo de 100 caracteres'),
   description: z.string().min(3, 'La descripción es requerida').max(280, 'La descripción puede tener un máximo de 280 caracteres').optional(),
   components: z.string().max(280, 'Este campo puede tener un máximo de 280 caracteres').optional(),
   samplingPointId: z.string().uuid().nullable().optional(),
@@ -47,6 +48,7 @@ const reducer: Reducer = (state, action) => {
 
 const initialErrors: Errors = {
   name: '',
+  externalId: '',
   description: '',
   components: '',
   samplingPointId: '',
@@ -56,12 +58,14 @@ const DeviceDetail: React.FC<DeviceDetailProps> = ({ device: foundDevice, sampli
   const initialData: Data = {
     create: {
       name: '',
+      externalId: '',
       description: '',
       components: '',
       samplingPointId: null,
     },
     update: {
       name: foundDevice?.name || '',
+      externalId: '',
       description: foundDevice?.description || '',
       components: foundDevice?.components || '',
       samplingPointId: foundDevice?.samplingPoint?.id,
@@ -187,6 +191,21 @@ const DeviceDetail: React.FC<DeviceDetailProps> = ({ device: foundDevice, sampli
           )}
         </div>
 
+        <div className='w-3/5 space-y-4'>
+        <InputText
+            label="Id del proveedor"
+            value={data.externalId}
+            error={errors.externalId}
+            variant='admin-2'
+            disabled={type === "update" && !isAbleToPerformActions}
+            onChange={(e) => {
+              setData({
+                type: 'externalId',
+                payload: e.target.value,
+              });
+            }}
+          />
+        </div>
         <div className='w-3/5 space-y-4'>
           <Select
             value={data.samplingPointId ?? null}

@@ -50,6 +50,7 @@ async function getHandler(req: NextApiRequest, res: NextApiResponse<any>, id: nu
       },
       select: {
         id: true,
+        externalId:true,
         samplingPointId: true,
         name: true,
         description: true,

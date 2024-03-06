@@ -73,7 +73,7 @@ const handler: NextApiHandler = async (req, res) => {
     if (!user) {
       return res.status(400).json({ error: 'Request must be done with a token containing user data' });
     }
-
+    console.log('user:', user);
     try {
       const device = await prismaClient.device.create({
         data: {
@@ -103,6 +103,7 @@ const handler: NextApiHandler = async (req, res) => {
 
       return res.status(201).json(device);
     } catch(e) {
+      console.log('error:', e);
       return res.status(500).json({ error: 'Internal server error' });
     }
   }
