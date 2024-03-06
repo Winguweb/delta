@@ -22,10 +22,9 @@ const handler: NextApiHandler = async (req, res) => {
 
 
 async function postHandler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
-  // TODO: Store promusat data for a device on the DB
   try {
     const splitData = (req.body as string).split(';');
-    const id = splitData[0];
+    const [id, date, latitude, longitude] = splitData
     const timestamp = nowWithTimezone();
     try {
       const device = (await prismaClient.device.findUnique({
@@ -41,8 +40,8 @@ async function postHandler(req: NextApiRequest, res: NextApiResponse): Promise<v
               id: device!.id,
             },
           },
-          latitude: parseFloat(splitData[3]),
-          longitude: parseFloat(splitData[2]),
+          latitude: parseFloat(latitude),
+          longitude: parseFloat(longitude),
           takenAt: timestamp,
           takenBy: {
             connect: {
