@@ -1,8 +1,10 @@
+import axios from 'axios';
 import classNames from 'classnames';
 import GoogleMapReact, { Bounds } from 'google-map-react';
 import { GetServerSideProps, NextPage, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import moment from 'moment';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Text from '../components/molecules/Text';
@@ -14,8 +16,6 @@ import { MapPosition } from '../model/mapPosition';
 import { getCurrentLocation } from '../utils/geolocationUtils';
 import { areNotificationsSupported } from '../utils/notificationsSupport';
 import { IconNotification } from '../assets/icons/IconNotification';
-import moment from "moment";
-import axiosFromServerSideProps from '../utils/axiosFromServerSideProps';
 
 const USER_MARKER_ID = 'USER_MARKER_ID';
 
@@ -31,12 +31,7 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async (
   try {
     const googleMapsApiKey = process.env.GOOGLE_MAPS_API_KEY;
     const webSocketURL = process.env.WEBSOCKET_URL;
-    const currentBoats = await (
-      await axiosFromServerSideProps(ctx)
-    )
-      .get('/api/external-samples?lastHour=true')
-      .then(data => JSON.parse(JSON.stringify(
-        data.data.samples.map((sample: any) => parseBoat({ ...sample, name: sample.device.name })))));
+    const currentBoats = await fetchBoats();
 
     if (!googleMapsApiKey) {
       throw new Error('Environment variable not set: GOOGLE_MAPS_API_KEY');
@@ -79,6 +74,12 @@ const parseBoat = (deviceSample: any): Boat => {
   };
 };
 
+const fetchBoats = async () => {
+  const data = await axios.get(`${process.env.BASE_URL}/api/external-samples?lastHour=true`, {});
+  return JSON.parse(JSON.stringify(
+    data.data.samples.map((sample: any) => parseBoat({ ...sample, name: sample.device.name }))));
+};
+
 type Boat = {
   id: number,
   coordinates: Coordinates,
@@ -108,6 +109,14 @@ const MapWithVehicles: NextPage<ServerSideProps> = ({
     getCurrentLocation((coords) => setMapPosition(getMapPosition(coords)), setError);
 
   }, [router.isReady, coords]);
+
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      const newBoats = await fetchBoats()
+      setBoats(newBoats)
+    }, 20000);
+    return () => clearInterval(interval);
+  }, []);
 
 
   useEffect(() => {
@@ -186,18 +195,18 @@ const MapWithVehicles: NextPage<ServerSideProps> = ({
                   lat={mapPosition.coords.lat}
                   lng={mapPosition.coords.lng}
               />
-              {Object.values(boats).map( (boat) =>
-                  <Marker
-                      key={boat.id}
-                      lat={boat.coordinates.lat}
-                      lng={boat.coordinates.lng}
-                      name={boat.name}
-                      takenAt={boat.takenAt}
-                      showInfoWindow={showInfoWindow}
-                      onClick={() => {
-                        setShowInfoWindow(!showInfoWindow)
-                      }}
-                  />)}
+              {Object.values(boats).map((boat) =>
+                <Marker
+                  key={boat.id}
+                  lat={boat.coordinates.lat}
+                  lng={boat.coordinates.lng}
+                  name={boat.name}
+                  takenAt={boat.takenAt}
+                  showInfoWindow={showInfoWindow}
+                  onClick={() => {
+                    setShowInfoWindow(!showInfoWindow);
+                  }}
+                />)}
             </GoogleMapReact>
           </div>
         </div>
