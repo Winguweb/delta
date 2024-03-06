@@ -60,6 +60,13 @@ const routeConfig: Config[] = [
     },
   },
   {
+    path: '/api/devices/samples',
+    checkAsRegex: false,
+    methods: {
+      POST: 'public',
+    },
+  },
+  {
     path: '/api/devices',
     checkAsRegex: false,
     roles: [UserRole.ADMIN, UserRole.COLLABORATOR],
