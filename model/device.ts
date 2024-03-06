@@ -17,7 +17,7 @@ export const updateDeviceSchema = z.object({
   samplingPointId: z.string().uuid().nullable().optional(),
 });
 
-interface AuxGetDeviceResponseInterface extends Pick<Device, 'id' | 'name' | 'samplingPointId' | 'description' | 'components'> {
+interface AuxGetDeviceResponseInterface extends Pick<Device, 'id' | 'externalId' | 'name' | 'samplingPointId' | 'description' | 'components'> {
   owner: Pick<User, 'id' | 'firstName' | 'lastName' | 'organizationName' | 'email'>,
   samplingPoint: Pick<SamplingPoint, 'id' | 'name'> | null,
 };

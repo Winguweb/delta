@@ -65,7 +65,7 @@ const DeviceDetail: React.FC<DeviceDetailProps> = ({ device: foundDevice, sampli
     },
     update: {
       name: foundDevice?.name || '',
-      externalId: '',
+      externalId: foundDevice?.externalId || '',
       description: foundDevice?.description || '',
       components: foundDevice?.components || '',
       samplingPointId: foundDevice?.samplingPoint?.id,
