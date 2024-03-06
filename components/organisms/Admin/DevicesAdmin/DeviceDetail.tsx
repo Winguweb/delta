@@ -17,7 +17,7 @@ import { useAuthenticatedUser } from '../../../../hooks/useAuthenticatedUser';
 
 const deviceSchema = z.object({
   name: z.string().min(3, 'El nombre es requerido').max(100, 'El nombre puede tener un máximo de 100 caracteres'),
-  externalId: z.string().max(100, 'El externalId puede tener un máximo de 100 caracteres'),
+  externalId: z.string().max(100, 'El externalId puede tener un máximo de 100 caracteres').optional(),
   description: z.string().min(3, 'La descripción es requerida').max(280, 'La descripción puede tener un máximo de 280 caracteres').optional(),
   components: z.string().max(280, 'Este campo puede tener un máximo de 280 caracteres').optional(),
   samplingPointId: z.string().uuid().nullable().optional(),
