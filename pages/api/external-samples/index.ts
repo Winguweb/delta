@@ -3,7 +3,7 @@ import availableMethodsHandler from "../../../utils/availableMethodsHandler";
 import { prismaClient } from "../../../server/prisma/client";
 import { createConfirmationTokenAWSSchema } from "../../../model/confirmationTokenAWS";
 import { ZodError, z } from "zod";
-import { atStartOfHoursAgoISO } from "../../../utils/dates";
+import { atStartOfHoursAgo, atStartOfHoursAgoISO } from '../../../utils/dates';
 
 const handler: NextApiHandler = async (req, res) => {
   if (!availableMethodsHandler(req, res, ['POST', 'GET'])) {
@@ -47,7 +47,7 @@ const handler: NextApiHandler = async (req, res) => {
         samples = await prismaClient.sample.findMany({
           where: {
             takenAt: {
-              gte: atStartOfHoursAgoISO(3),
+              gte: atStartOfHoursAgo(3),
             },
           },
           select: {
