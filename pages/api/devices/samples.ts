@@ -2,7 +2,7 @@ import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import availableMethodsHandler from '../../../utils/availableMethodsHandler';
 import { onSampleUpload } from '../../../server/notifier/appNotifierService';
 import { prismaClient } from '../../../server/prisma/client';
-import { nowWithTimezone } from '../../../utils/dates';
+import moment from 'moment';
 
 const availableMethods = ['POST'];
 
@@ -25,7 +25,7 @@ async function postHandler(req: NextApiRequest, res: NextApiResponse): Promise<v
   try {
     const splitData = (req.body as string).split(';');
     const [id, date, latitude, longitude] = splitData
-    const timestamp = nowWithTimezone();
+    const timestamp = moment(date, "YYYY-MM-DD h:mm:ss").toDate();
     try {
       const device = (await prismaClient.device.findUnique({
         where: {
