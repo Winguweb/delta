@@ -31,7 +31,7 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async (
   try {
     const googleMapsApiKey = process.env.GOOGLE_MAPS_API_KEY;
     const webSocketURL = process.env.WEBSOCKET_URL;
-    const currentBoats = await fetchBoats();
+    const currentBoats = await fetchBoats(process.env.BASE_URL);
 
     if (!googleMapsApiKey) {
       throw new Error('Environment variable not set: GOOGLE_MAPS_API_KEY');
@@ -66,6 +66,8 @@ const getMapPosition = (coords: Coordinates | undefined): MapPosition => {
 };
 
 const parseBoat = (deviceSample: any): Boat => {
+  console.log(moment(deviceSample.takenAt, 'YYYY-MM-DD HH:mm'))
+
   return {
     id: deviceSample.deviceId,
     coordinates: { lat: deviceSample.latitude, lng: deviceSample.longitude },
@@ -74,8 +76,8 @@ const parseBoat = (deviceSample: any): Boat => {
   };
 };
 
-const fetchBoats = async () => {
-  const data = await axios.get(`${process.env.BASE_URL}/api/external-samples?lastHour=true`, {});
+const fetchBoats = async (baseUrl: any) => {
+  const data = await axios.get(`${baseUrl}/api/external-samples?lastHour=true`, {});
   return JSON.parse(JSON.stringify(
     data.data.samples.map((sample: any) => parseBoat({ ...sample, name: sample.device.name }))));
 };
@@ -112,8 +114,9 @@ const MapWithVehicles: NextPage<ServerSideProps> = ({
 
   useEffect(() => {
     const interval = setInterval(async () => {
-      const newBoats = await fetchBoats()
+      const newBoats = await fetchBoats("")
       setBoats(newBoats)
+      console.log(newBoats)
     }, 20000);
     return () => clearInterval(interval);
   }, []);

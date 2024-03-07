@@ -3,8 +3,8 @@ import { DeviceCoordinates } from './deviceCoordinates';
 import { prismaClient } from '../prisma/client';
 import { computeDistanceBetween } from 'spherical-geometry-js';
 import { MIN_DISTANCE } from './notifierConfig';
-import { nowWithTimezone, todayAtStartOfDayWithTimezone } from '../../utils/dates';
 import { sendWhatsappNotification } from './whatsappService';
+import moment from 'moment';
 
 const http = axios.create({
   baseURL: process.env.NOTIFIER_URL,
@@ -33,7 +33,7 @@ export async function onSampleUpload(sample: Sample) {
     );
     return res.data;
   } catch (err: any) {
-    console.error('[NotifierService] error:', err);
+    console.error('[NotifierService] error');
   }
 }
 
@@ -43,12 +43,12 @@ async function authenticate() {
     const res = await http.post('/auth', body);
     return res.data.token;
   } catch (err: any) {
-    console.error('[NotifierService][Auth] error:', err);
+    console.error('[NotifierService][Auth] error');
   }
 }
 
 async function findUsersToNotify(coords: DeviceCoordinates) {
-  const firstHourToday = todayAtStartOfDayWithTimezone();
+  const firstHourToday = moment().startOf('day').format();
   const users = await prismaClient.notifyOrder.findMany({
     where: {
       OR: [
@@ -74,7 +74,7 @@ async function findUsersToNotify(coords: DeviceCoordinates) {
       usersNotified.push(user.id);
     }
   });
-  const today = nowWithTimezone();
+  const now = moment().format();
   await prismaClient.notifyOrder.updateMany({
     where: {
       id: {
@@ -82,7 +82,7 @@ async function findUsersToNotify(coords: DeviceCoordinates) {
       },
     },
     data: {
-      lastNotifiedAt: today,
+      lastNotifiedAt: now,
     },
   });
 }

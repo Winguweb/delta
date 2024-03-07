@@ -23,3 +23,7 @@ export function todayAtStartOfDayWithTimezone() {
 export function atStartOfHoursAgoISO(hours: number) {
   return moment().startOf('hour').subtract(hours, 'hour').toISOString();
 }
+
+export function atStartOfHoursAgo(hours: number) {
+  return moment().startOf('hour').subtract(hours, 'hour').format();
+}
