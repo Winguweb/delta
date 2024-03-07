@@ -33,7 +33,7 @@ export async function onSampleUpload(sample: Sample) {
     );
     return res.data;
   } catch (err: any) {
-    console.error('[NotifierService] error:', err);
+    console.error('[NotifierService] error');
   }
 }
 
@@ -43,7 +43,7 @@ async function authenticate() {
     const res = await http.post('/auth', body);
     return res.data.token;
   } catch (err: any) {
-    console.error('[NotifierService][Auth] error:', err);
+    console.error('[NotifierService][Auth] error');
   }
 }
 
