@@ -66,8 +66,6 @@ const getMapPosition = (coords: Coordinates | undefined): MapPosition => {
 };
 
 const parseBoat = (deviceSample: any): Boat => {
-  console.log(moment(deviceSample.takenAt, 'YYYY-MM-DD HH:mm'))
-
   return {
     id: deviceSample.deviceId,
     coordinates: { lat: deviceSample.latitude, lng: deviceSample.longitude },
@@ -116,7 +114,6 @@ const MapWithVehicles: NextPage<ServerSideProps> = ({
     const interval = setInterval(async () => {
       const newBoats = await fetchBoats("")
       setBoats(newBoats)
-      console.log(newBoats)
     }, 20000);
     return () => clearInterval(interval);
   }, []);
