@@ -73,7 +73,6 @@ const handler: NextApiHandler = async (req, res) => {
     if (!user) {
       return res.status(400).json({ error: 'Request must be done with a token containing user data' });
     }
-
     try {
       const device = await prismaClient.device.create({
         data: {
