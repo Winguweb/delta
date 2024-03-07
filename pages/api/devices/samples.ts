@@ -57,7 +57,7 @@ async function postHandler(req: NextApiRequest, res: NextApiResponse): Promise<v
     }
 
 
-    console.log(`Vessel ${id}, lat:${splitData[2]}, lng:${splitData[3]}`);
+    console.log(`[Samples] New Sample: `, req.body);
   } catch (e) {
     console.error(e);
   }
