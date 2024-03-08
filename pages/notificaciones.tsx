@@ -11,6 +11,7 @@ import { Button } from '../components/molecules/Buttons/Button';
 import { IconActualLocation } from '../assets/icons';
 import { SuccessModal } from '../components/organisms/Notifications/SuccessModal';
 import { NotifyOrderForm } from '../components/organisms/Notifications/NotifyOrderForm';
+import { getCurrentLocation } from '../utils/geolocationUtils';
 
 export type NotifyOrderFormValues = {
   telephone: string;
@@ -66,23 +67,6 @@ const ActivateNotifications: NextPage<ServerSideProps> = ({ googleMapsApiKey }: 
     resolver: yupResolver(schema),
   });
 
-  function getCurrentLocation(callback: (coords: Coordinates) => void, setError: (message: string) => void): void {
-    navigator.geolocation.getCurrentPosition(
-      (position: GeolocationPosition) => {
-        const { coords } = position;
-        const { latitude: lat, longitude: lng } = coords;
-        callback({ lat, lng });
-      },
-      (error: GeolocationPositionError) =>
-        setError('Debe permitir el acceso a la ubicación para usar esta función'),
-      {
-        enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 0,
-      },
-    );
-  }
-
   useEffect(() => {
     getCurrentLocation((coords) => setUserLocation(coords), () => {
     });
@@ -100,6 +84,7 @@ const ActivateNotifications: NextPage<ServerSideProps> = ({ googleMapsApiKey }: 
         <div className="h-full flex place-content-center">
           {showMap ? (
             <>
+              {userLocation && (
               <Button variant="primary-admin" onClick={() => {
                 map.setCenter(userLocation);
               }} className="fixed lg:right-5 right-0 m-4 z-40">
@@ -107,6 +92,7 @@ const ActivateNotifications: NextPage<ServerSideProps> = ({ googleMapsApiKey }: 
                   <IconActualLocation />
                 </div>
               </Button>
+              )}
               <span className="z-50 relative drop-shadow-md left-1/2 top-1/2 pointer-events-none">
               <LocationMarker
                 lat={coordsCasa.lat} lng={coordsCasa.lng} />
