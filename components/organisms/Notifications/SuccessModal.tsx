@@ -12,13 +12,13 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({ showModal }) => {
   return <Modal
     showModal={showModal}
     className={'flex flex-col pt-12'}
-    width={'w-full'}
+    width={'lg:w-1/2 md:w-3/4 w-full'}
   >
     <div className="flex items-center justify-center flex-col px-2 space-y-4 mt-4">
       <h2 className="text-xl font-semibold p-2">¡Gracias!</h2>
       <p className="text-center">
-        Has completado correctamente la solicitud, ahora recibirás notificaciones por WhatsApp cuando tu
-        servicio esté cerca de la ubicación cargada
+        Has completado correctamente la solicitud, ahora recibirás notificaciones por WhatsApp cuando el
+        servicio esté cerca de tu muelle.
       </p>
       <div className="pb-4 lg:pt-3 flex justify-center ">
         <button

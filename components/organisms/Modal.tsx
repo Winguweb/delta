@@ -73,7 +73,7 @@ export const Modal: React.FC<ModalProps> = ({
               <IconButton onClick={onClose} icon={<XMarkIcon />} iconSize="small" />
             </div>
           )}
-          <div className="modal-children max-w-[21rem] lg:max-w-full">{children}</div>
+          <div className="modal-children max-w-[21rem] self-center lg:max-w-full">{children}</div>
         </div>
       </div>
     </div>
