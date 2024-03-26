@@ -14,7 +14,6 @@ import { Marker, UserMarker } from '../components/molecules/Marker';
 import { Coordinates } from '../model/map';
 import { MapPosition } from '../model/mapPosition';
 import { getCurrentLocation } from '../utils/geolocationUtils';
-import { areNotificationsSupported } from '../utils/notificationsSupport';
 import { IconNotification } from '../assets/icons/IconNotification';
 
 const USER_MARKER_ID = 'USER_MARKER_ID';
@@ -99,6 +98,8 @@ const MapWithVehicles: NextPage<ServerSideProps> = ({
   const [error, setError] = useState('')
   const [bounds, setBounds] = useState<Bounds | null>(null);
   const [showInfoWindow, setShowInfoWindow] = useState<Boolean>(false)
+  const [map, setMap] = useState(null);
+  const [userLocation, setUserLocation] = useState<Coordinates | null>(null);
 
   const [boats, setBoats] = useState<Map<number, Boat>>(currentBoats);
 
@@ -106,7 +107,12 @@ const MapWithVehicles: NextPage<ServerSideProps> = ({
     if (!router.isReady) {
       return;
     }
-    getCurrentLocation((coords) => setMapPosition(getMapPosition(coords)), setError);
+    getCurrentLocation((coords) => {
+      setMapPosition(getMapPosition(coords));
+      setUserLocation(coords)
+    }, (_m) => {
+      setMapPosition({coords: coordsCasa, zoom: defaultZoom})
+    });
 
   }, [router.isReady, coords]);
 
@@ -129,10 +135,6 @@ const MapWithVehicles: NextPage<ServerSideProps> = ({
         return {...prev, [boat.id]: boat}
       });
     };
-
-    if (areNotificationsSupported()) {
-      Notification.requestPermission();
-    }
 
     return () => {
       ws.close()
@@ -190,11 +192,11 @@ const MapWithVehicles: NextPage<ServerSideProps> = ({
               }}
 
             >
-              <UserMarker
-                  key={USER_MARKER_ID}
-                  lat={mapPosition.coords.lat}
-                  lng={mapPosition.coords.lng}
-              />
+              {userLocation && (<UserMarker
+                key={USER_MARKER_ID}
+                lat={userLocation.lat}
+                lng={userLocation.lng}
+              />)}
               {Object.values(boats).map((boat) =>
                 <Marker
                   key={boat.id}
