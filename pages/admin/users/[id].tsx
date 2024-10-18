@@ -25,9 +25,12 @@ interface ServerSideProps {
 
 type Data = z.infer<typeof dataSchema>;
 
-export const getServerSideProps: GetServerSideProps<ServerSideProps> = async (
-  ctx
-) => {
+/**
+ * Esta es la pantalla para editar un usuario que poseen los Admins.
+ */
+
+
+export const getServerSideProps: GetServerSideProps<ServerSideProps> = async (ctx) => {
   try {
     const user: GetUserResponse = await (await axiosFromServerSideProps(ctx))
       .get(`/api/admin/users/${ctx.query.id}`)

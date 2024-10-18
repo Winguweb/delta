@@ -8,6 +8,13 @@ import {
 import { prismaClient } from '../../../../../server/prisma/client';
 import availableMethodsHandler from '../../../../../utils/availableMethodsHandler';
 
+
+/**
+ *  Controller de los requests:
+ *   - GET '/api/admin/users/{id}'
+ *   - PUT '/api/admin/users/{id}'
+ */
+
 const handler: NextApiHandler = async (req, res) => {
   if (!availableMethodsHandler(req, res, ['GET', 'PUT'])) {
     return;
