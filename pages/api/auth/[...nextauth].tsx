@@ -16,6 +16,7 @@ export default NextAuth({
       authorize: async (
         credentials: any
       ): Promise<AuthenticatedUser | null> => {
+
         const { email, password } = credentials;
 
         const user = await prismaClient.user.findUnique({
@@ -66,7 +67,7 @@ export default NextAuth({
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   callbacks: {
-    jwt: async ({ token, user }): Promise<JWT> => {
+    jwt: async ({ token, user, account }): Promise<JWT> => {
       return user ? { ...token, user } : token;
     },
     session: async ({ session, token }): Promise<Session> => {

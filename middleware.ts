@@ -139,7 +139,7 @@ const routeConfig: Config[] = [
   {
     path: '/api/admin/users',
     checkAsRegex: false,
-    roles: [UserRole.ADMIN,  UserRole.COLLABORATOR],
+    roles: [UserRole.ADMIN,  UserRole.COLLABORATOR, UserRole.PROVIDER],
   },
   // related to Changelog
   {
