@@ -108,3 +108,6 @@ pgadmin-data
 
 # postgres
 data/
+
+# Idea
+.idea
