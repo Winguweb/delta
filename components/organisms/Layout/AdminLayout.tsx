@@ -26,13 +26,15 @@ let links: SidebarLinkProps[] = [
     text: 'Puntos de toma',
     icon: <MapPinIcon />,
     selected: false,
+    restrictedTo: [UserRole.ADMIN, UserRole.COLLABORATOR],
   },
   {
     href: '/admin/modulos',
     text: 'Módulos',
     icon: <Squares2X2Icon />,
     selected: false,
-  }, 
+    restrictedTo: [UserRole.ADMIN, UserRole.COLLABORATOR],
+  },
   {
     href: '/admin/news-posts',
     text: 'Noticias',

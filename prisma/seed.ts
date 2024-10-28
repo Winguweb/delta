@@ -14,10 +14,12 @@ const prisma = new PrismaClient();
 
 const emailAdmin = process.env.EMAIL_ADMIN_SEED;
 const emailCollaborator = process.env.EMAIL_COLLABORATOR_SEED;
+const emailProvider = process.env.EMAIL_PROVIDER_SEED;
 const password = process.env.PASSWORD_SEED;
 
 const hasToCreateAdmin = emailAdmin && password;
 const hasToCreateCollaborator = emailCollaborator && password;
+const hasToCreateProvider = emailProvider && password;
 
 const baseUserData = {
   organizationCountry: 'Argentina',
@@ -249,6 +251,26 @@ async function main() {
       longitude: -58.39187918,
     }
   })
+
+  if(hasToCreateProvider) {
+    const hashedPassword = await bcrypt.hash(password, BCRYPT_COST);
+
+    await prisma.user.create({
+      data: {
+        email: emailProvider,
+        password: hashedPassword,
+        firstName: 'Proveedor',
+        lastName: 'Proveedor',
+        role: UserRole.PROVIDER,
+        ...baseUserData,
+        organizationCountry: {
+          connect: {
+            id: mexicoCountry.id,
+          }
+        }
+      },
+    });
+  }
 }
 
 main()

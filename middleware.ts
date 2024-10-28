@@ -69,7 +69,7 @@ const routeConfig: Config[] = [
   {
     path: '/api/devices',
     checkAsRegex: false,
-    roles: [UserRole.ADMIN, UserRole.COLLABORATOR],
+    roles: [UserRole.ADMIN, UserRole.COLLABORATOR, UserRole.PROVIDER],
   },
   {
     path: '/admin/devices',

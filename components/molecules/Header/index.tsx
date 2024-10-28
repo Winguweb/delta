@@ -1,9 +1,10 @@
-import { signOut } from 'next-auth/react';
-import { useRouter } from 'next/router';
-import { useState } from 'react';
-import { DesktopHeader, MobileHeader } from './components';
+import {signOut} from 'next-auth/react';
+import {useRouter} from 'next/router';
+import {useState} from 'react';
+import {DesktopHeader, MobileHeader} from './components';
 import Container from '../../organisms/Container';
-import { useAuthenticatedUser } from '../../../hooks/useAuthenticatedUser';
+import {useAuthenticatedUser} from '../../../hooks/useAuthenticatedUser';
+import {UserRole} from "@prisma/client";
 
 export function Header({
   onMenuOpening: handleMenuOpening,
@@ -22,8 +23,12 @@ export function Header({
     { href: '/preguntas-frecuentes', children: 'Preguntas Frecuentes' },
   ];
 
-  if (!!user) {
+  if (!!user && user.role !== UserRole.PROVIDER) {
     items.push({ href: '/admin/sampling-points', children: 'Admin' });
+  }
+
+  if (!!user && user.role === UserRole.PROVIDER) {
+    items.push({ href: '/provider/lanchas', children: 'Lanchas' });
   }
 
   const handleToggle = () => {
