@@ -38,6 +38,7 @@ model Country {
 enum UserRole {
   ADMIN
   COLLABORATOR
+  PROVIDER
 }
 
 enum UserStatus {
