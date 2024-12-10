@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { DesktopHeader, MobileHeader } from './components';
 import Container from '../../organisms/Container';
 import { useAuthenticatedUser } from '../../../hooks/useAuthenticatedUser';
+import { UserRole } from '@prisma/client';
 
 export function Header({
   onMenuOpening: handleMenuOpening,
@@ -23,7 +24,8 @@ export function Header({
   ];
 
   if (!!user) {
-    items.push({ href: '/admin/sampling-points', children: 'Admin' });
+    let href = user.role === UserRole.PROVIDER ? '/admin/lanchas' : '/admin/sampling-points';
+    items.push({ href: href, children: 'Admin' });
   }
 
   const handleToggle = () => {
