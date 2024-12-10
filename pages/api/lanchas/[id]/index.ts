@@ -159,6 +159,12 @@ async function deleteHandler(req: NextApiRequest, res: NextApiResponse<any>, id:
       return res.status(403).json({ error: `User needs to be the owner of the device` });
     }
 
+    // Hay que borrar los samples y el sampling point para borrar la lancha
+    await prismaClient.sample.deleteMany({ where: { takenById: device.ownerId } });
+
+    // @ts-ignore
+    await prismaClient.samplingPoint.delete({where: {id: device.samplingPointId}});
+
     const deletedDevice = await prismaClient.device.delete({ where: { id: id } });
 
     await prismaClient.change.create({
