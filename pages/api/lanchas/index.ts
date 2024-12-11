@@ -75,7 +75,7 @@ const handler: NextApiHandler = async (req, res) => {
     }
 
     // SE AGREGA UN APIKEY GENERICA PARA TODAS LAS LANCHAS
-    const hashedApiKey = await bcrypt.hash('UN_APIKEY_PARA_LAS_LANCHAS', BCRYPT_COST);
+    const hashedApiKey = await bcrypt.hash('8a19cad9-e3cb-4dec-9241-6a19d65ab6fa', BCRYPT_COST);
 
     try {
       // PARA PODER UTILIZAR LA "LANCHA" (DEVICE), SE TIENE QUE AGREGAR UN SAMPLING POINT
