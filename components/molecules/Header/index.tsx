@@ -25,7 +25,7 @@ export function Header({
 
   if (!!user) {
     let href = user.role === UserRole.PROVIDER ? '/admin/lanchas' : '/admin/sampling-points';
-    items.push({ href: href, children: 'Admin' });
+    items.push({ href, children: 'Admin' });
   }
 
   const handleToggle = () => {

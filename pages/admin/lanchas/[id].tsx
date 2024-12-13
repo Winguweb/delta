@@ -40,8 +40,9 @@ const EditLancha: NextPage<ServerSideProps> = ({ device }: InferGetServerSidePro
   const isAbleToPerformActions = isUserAdmin || isUserOwner;
   return (
     <AdminLayout title="Editar Lancha">
-      {device && <LanchasDetail type="update" device={device} isAbleToPerformActions={isAbleToPerformActions} />}
-      {!device && <h1>Error</h1>}
+      {device ?
+        <LanchasDetail type="update" device={device} isAbleToPerformActions={isAbleToPerformActions} />
+        : <h1>Error</h1>}
     </AdminLayout>
   );
 };
