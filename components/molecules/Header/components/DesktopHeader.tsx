@@ -6,6 +6,7 @@ import Logo from './Logo';
 import { BackButton } from '../../Buttons/BackButton';
 import { useRouter } from 'next/router';
 import { useAuthenticatedUser } from '../../../../hooks/useAuthenticatedUser';
+import Image from "next/image";
 
 interface DesktopHeaderProps {
   items: ItemProps[];
@@ -22,6 +23,30 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({
   const user = useAuthenticatedUser();
   const isLogged = !!user;
   const isHome = router.pathname === '/';
+
+  const isLoginForDeltaEmisor = router.pathname === '/auth/mobile/login';
+  if(isLoginForDeltaEmisor) {
+    return (
+      <div className="px-9 py-4 hidden lg:block">
+        <div className="flex justify-between items-center">
+          <div className='flex space-x-2'>
+            <span>
+              {/* Desktop logo */}
+              <span className="hidden lg:block">
+                <Image
+                  src={'/assets/LogoText.png'}
+                  alt="Delta Logo"
+                  height={100}
+                  width={150}
+                  className="cursor-pointer"
+                />
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="px-9 py-4 hidden lg:block">
