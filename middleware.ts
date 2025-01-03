@@ -69,12 +69,22 @@ const routeConfig: Config[] = [
   {
     path: '/api/devices',
     checkAsRegex: false,
-    roles: [UserRole.ADMIN, UserRole.COLLABORATOR],
+    roles: [UserRole.ADMIN, UserRole.COLLABORATOR, UserRole.PROVIDER],
   },
   {
     path: '/admin/devices',
     checkAsRegex: false,
-    roles: [UserRole.ADMIN, UserRole.COLLABORATOR],
+    roles: [UserRole.ADMIN, UserRole.COLLABORATOR, UserRole.PROVIDER],
+  },
+  {
+    path: '/api/lanchas',
+    checkAsRegex: false,
+    roles: [UserRole.ADMIN, UserRole.PROVIDER],
+  },
+  {
+    path: '/admin/lanchas',
+    checkAsRegex: false,
+    roles: [UserRole.ADMIN, UserRole.PROVIDER],
   },
   // related to External Samples
   {
@@ -118,7 +128,7 @@ const routeConfig: Config[] = [
   {
     path: '/admin/sampling-points',
     checkAsRegex: false,
-    roles: [UserRole.ADMIN, UserRole.COLLABORATOR],
+    roles: [UserRole.ADMIN, UserRole.COLLABORATOR, UserRole.PROVIDER],
   },
   {
     path: '/api/sampling-points',
@@ -139,7 +149,7 @@ const routeConfig: Config[] = [
   {
     path: '/api/admin/users',
     checkAsRegex: false,
-    roles: [UserRole.ADMIN,  UserRole.COLLABORATOR],
+    roles: [UserRole.ADMIN,  UserRole.COLLABORATOR, UserRole.PROVIDER],
   },
   // related to Changelog
   {
